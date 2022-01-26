@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('redsys_payments', function (Blueprint $table) {
+            $table->id();
+            $table->morphs('model');
+            $table->uuid('uuid');
+            $table->enum('status', ['pending', 'denied', 'paid'])->default('pending');
+            $table->bigInteger('order_number')->unique();
+            $table->decimal('amount');
+            $table->integer('currency');
+            $table->string('language');
+            $table->string('product_description', 125);
+            $table->string('response_code')->nullable();
+            $table->text('response_message')->nullable();
+            $table->string('auth_code')->nullable();
+            $table->timestamps();
+        });
+
+         Schema::create('redsys_notification_attempts', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('redsys_payment_id')->nullable();
+            $table->json('merchant_parameters');
+            $table->timestamps();
+         });
+    }
+};
