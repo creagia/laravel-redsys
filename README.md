@@ -35,17 +35,25 @@ You can install the package via composer:
 composer require creagia/laravel-redsys
 ```
 
-You should publish and run the migrations with:
+After that, you should publish and run the migrations:
 
 ```bash
 php artisan vendor:publish --tag="redsys-migrations"
 php artisan migrate
 ```
 
-You should publish the config file with:
+Next, you should publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="redsys-config"
+```
+
+Finally, you should define, at least, the required options in your .env file:
+
+```
+REDSYS_ENVIRONMENT
+REDSYS_MERCHANT_CODE
+REDSYS_KEY
 ```
 
 This is the content of the published config file:
