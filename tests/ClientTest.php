@@ -3,7 +3,6 @@
 namespace Creagia\LaravelRedsys\Tests;
 
 use Creagia\LaravelRedsys\Exceptions\RedsysConfigError;
-use Creagia\LaravelRedsys\RedsysPayment;
 use Creagia\Redsys\Enums\Currency;
 use Creagia\Redsys\RedsysRequest;
 use Illuminate\Support\Facades\Config;
