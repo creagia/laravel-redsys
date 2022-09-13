@@ -6,6 +6,7 @@ use Creagia\LaravelRedsys\Events\RedsysSuccessfulEvent;
 use Creagia\LaravelRedsys\Events\RedsysUnsuccessfulEvent;
 use Creagia\Redsys\Exceptions\InvalidRedsysNotification;
 use Illuminate\Support\Facades\Event;
+
 use function Pest\Laravel\post;
 use function Pest\Laravel\withoutExceptionHandling;
 

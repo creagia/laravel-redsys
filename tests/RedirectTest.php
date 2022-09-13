@@ -4,6 +4,7 @@ namespace Creagia\LaravelRedsys\Tests;
 
 use Creagia\LaravelRedsys\Controllers\RedsysLocalGatewayController;
 use Illuminate\Support\Facades\Config;
+
 use function Pest\Laravel\get;
 use function Pest\Laravel\withoutExceptionHandling;
 
