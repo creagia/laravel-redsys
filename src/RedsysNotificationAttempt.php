@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property \Carbon\Carbon $created_at
- * @property string $merchant_parameters
+ * @property array $merchant_parameters
  */
 class RedsysNotificationAttempt extends Model
 {
