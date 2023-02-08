@@ -45,6 +45,11 @@ class RedsysPayment extends Model
         return $this->morphTo();
     }
 
+    public function notificationAttempts()
+    {
+        return $this->hasMany(RedsysNotificationAttempt::class);
+    }
+
     public function getRedirectRoute(): string
     {
         return action(RedsysRedirectionController::class, ['uuid' => $this->uuid]);
