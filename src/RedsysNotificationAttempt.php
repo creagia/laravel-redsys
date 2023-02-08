@@ -2,6 +2,7 @@
 
 namespace Creagia\LaravelRedsys;
 
+use Creagia\Redsys\RedsysNotification;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -19,5 +20,16 @@ class RedsysNotificationAttempt extends Model
     public function redsysPayment()
     {
         return $this->belongsTo(RedsysPayment::class);
+    }
+
+    public function getStatus()
+    {
+        if (! isset($this->merchant_parameters['Ds_Response'])) {
+            return RedsysPaymentStatus::Pending;
+        }
+
+        return RedsysNotification::isAuthorisedCode($this->merchant_parameters['Ds_Response'])
+            ? RedsysPaymentStatus::Paid
+            : RedsysPaymentStatus::Denied;
     }
 }
