@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-redsys` will be documented in this file.
 
+## 1.1.2 - 2023-02-15
+
+### What's Changed
+
+- Laravel 10.x compatibility by @dtorras in https://github.com/creagia/laravel-redsys/pull/16
+
+**Full Changelog**: https://github.com/creagia/laravel-redsys/compare/1.1.1...1.1.2
+
 ## 1.1.1 - 2023-02-08
 
 ### What's Changed
