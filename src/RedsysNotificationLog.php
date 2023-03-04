@@ -4,12 +4,13 @@ namespace Creagia\LaravelRedsys;
 
 use Creagia\Redsys\RedsysNotification;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property \Carbon\Carbon $created_at
  * @property array $merchant_parameters
  */
-class RedsysNotificationAttempt extends Model
+class RedsysNotificationLog extends Model
 {
     protected $guarded = [];
 
@@ -17,12 +18,15 @@ class RedsysNotificationAttempt extends Model
         'merchant_parameters' => 'json',
     ];
 
-    public function redsysPayment()
+    /**
+     * @return BelongsTo<RedsysPayment, RedsysNotificationLog>
+     */
+    public function redsysPayment(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(RedsysPayment::class);
     }
 
-    public function getStatus()
+    public function getStatus(): RedsysPaymentStatus
     {
         if (! isset($this->merchant_parameters['Ds_Response'])) {
             return RedsysPaymentStatus::Pending;

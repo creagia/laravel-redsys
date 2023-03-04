@@ -6,5 +6,5 @@ interface RedsysPayable
 {
     public function getTotalAmount(): float;
 
-    public function paidWithRedsys();
+    public function paidWithRedsys(): void;
 }

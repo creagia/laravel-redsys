@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Http;
 
 class RedsysLocalGatewayController
 {
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\Contracts\View\View
     {
         if (! app()->environment('local')) {
-            throw new \Exception('Local Gateway only available on local environment. Update your .env file.');
+            throw new \Exception('Local Gateway is only available on local environment. Update your .env file.');
         }
 
         $params = json_decode(urldecode(base64_decode(strtr($request->Ds_MerchantParameters, '-_', '+/'))), true);
@@ -22,7 +22,7 @@ class RedsysLocalGatewayController
         ]);
     }
 
-    public function post(Request $request)
+    public function post(Request $request): \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
     {
         $params = json_decode(urldecode(base64_decode(strtr($request->get('Ds_MerchantParameters'), '-_', '+/'))), true);
         $authorised = RedsysNotification::isAuthorisedCode((int) $request->responseCode);

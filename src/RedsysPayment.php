@@ -14,6 +14,7 @@ use Creagia\Redsys\Enums\TransactionType;
 use Creagia\Redsys\RedsysRequest;
 use Creagia\Redsys\Support\RequestParameters;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -40,14 +41,20 @@ class RedsysPayment extends Model
         self::observe(RedsysPaymentObserver::class);
     }
 
+    /**
+     * @return MorphTo<Model, RedsysPayment>
+     */
     public function model(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function notificationAttempts()
+    /**
+     * @return HasMany<RedsysNotificationLog>
+     */
+    public function notificationLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(RedsysNotificationAttempt::class);
+        return $this->hasMany(RedsysNotificationLog::class);
     }
 
     public function getRedirectRoute(): string
@@ -62,7 +69,7 @@ class RedsysPayment extends Model
 
         $redsysRequest->createPaymentRequest(
             amount: $this->amount,
-            orderNumber: $this->order_number,
+            orderNumber: (string) $this->order_number,
             currency: Currency::from($this->currency),
             transactionType: TransactionType::Autorizacion,
             requestParameters: new RequestParameters(

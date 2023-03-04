@@ -6,7 +6,7 @@ use function view;
 
 class RedsysUnsuccessfulPaymentViewController
 {
-    public function __invoke()
+    public function __invoke(): \Illuminate\View\View
     {
         return view('redsys::unsuccessful');
     }

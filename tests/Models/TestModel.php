@@ -17,7 +17,7 @@ class TestModel extends Model implements RedsysPayable
         return 123.45;
     }
 
-    public function paidWithRedsys()
+    public function paidWithRedsys(): void
     {
         $this->status = 'paid';
         $this->save();

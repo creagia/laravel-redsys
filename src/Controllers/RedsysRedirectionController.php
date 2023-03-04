@@ -6,7 +6,7 @@ use Creagia\LaravelRedsys\RedsysPayment;
 
 class RedsysRedirectionController
 {
-    public function __invoke(string $uuid)
+    public function __invoke(string $uuid): \Illuminate\Http\Response
     {
         /** @var RedsysPayment $redsysPayment */
         $redsysPayment = RedsysPayment::where('uuid', $uuid)->firstOrFail();

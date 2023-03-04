@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('redsys_payments', function (Blueprint $table) {
             $table->id();
-            $table->morphs('model');
+            $table->nullableMorphs('model');
             $table->uuid('uuid');
             $table->enum('status', ['pending', 'denied', 'paid'])->default('pending');
             $table->bigInteger('order_number')->unique();
-            $table->decimal('amount');
+            $table->bigInteger('amount');
             $table->integer('currency');
             $table->string('language');
             $table->string('product_description', 125);
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-         Schema::create('redsys_notification_attempts', function (Blueprint $table) {
+         Schema::create('redsys_notification_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('redsys_payment_id')->nullable();
             $table->json('merchant_parameters');

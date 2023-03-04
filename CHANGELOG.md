@@ -2,6 +2,13 @@
 
 All notable changes to `laravel-redsys` will be documented in this file.
 
+## 2.0.0 - xxx
+
+- New: create payments not related to Eloquent Models
+- Breaking: renamed RedsysNotificationAttempt to RedsysNotificationLog
+- Breaking: the payment amount is stored in cents
+- Breaking: database changes
+
 ## 1.1.2 - 2023-02-15
 
 ### What's Changed

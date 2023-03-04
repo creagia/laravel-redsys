@@ -7,7 +7,7 @@ use Creagia\LaravelRedsys\Events\RedsysNotificationEvent;
 use Creagia\LaravelRedsys\Events\RedsysSuccessfulEvent;
 use Creagia\LaravelRedsys\Events\RedsysUnsuccessfulEvent;
 use Creagia\LaravelRedsys\Exceptions\RedsysPaymentNotFound;
-use Creagia\LaravelRedsys\RedsysNotificationAttempt;
+use Creagia\LaravelRedsys\RedsysNotificationLog;
 use Creagia\LaravelRedsys\RedsysPayment;
 use Creagia\LaravelRedsys\RedsysPaymentStatus;
 use Creagia\Redsys\Exceptions\DeniedRedsysPaymentNotification;
@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 
 class RedsysNotificationController
 {
-    public function __invoke(Request $request, CreateRedsysClient $createRedsysClient)
+    public function __invoke(Request $request, CreateRedsysClient $createRedsysClient): void
     {
         $inputs = $request->all();
         RedsysNotificationEvent::dispatch($inputs);
@@ -25,17 +25,18 @@ class RedsysNotificationController
         $redsysNotification = new RedsysNotification($redsysClient);
         $redsysNotification->setParametersFromResponse($inputs);
 
-        $redsysNotificationAttempt = RedsysNotificationAttempt::create([
+        $redsysNotificationLog = RedsysNotificationLog::create([
             'merchant_parameters' => $redsysNotification->merchantParametersArray,
         ]);
 
         $redsysPayment = RedsysPayment::where('order_number', $redsysNotification->parameters->order)->first();
+
         if (! $redsysPayment) {
             throw new RedsysPaymentNotFound('Redsys Payment not found from bank response');
         }
 
-        $redsysNotificationAttempt->redsysPayment()->associate($redsysPayment);
-        $redsysNotificationAttempt->save();
+        $redsysNotificationLog->redsysPayment()->associate($redsysPayment);
+        $redsysNotificationLog->save();
 
         $redsysPayment->response_code = $redsysNotification->parameters->responseCode ?? null;
         $redsysPayment->auth_code = (empty($authCode = trim($redsysNotification->parameters->responseAuthorisationCode))) ? null : $authCode;
