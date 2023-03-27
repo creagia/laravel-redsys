@@ -1,0 +1,36 @@
+<?php
+
+namespace Creagia\LaravelRedsys\Concerns;
+
+use Creagia\LaravelRedsys\Controllers\RedsysNotificationController;
+use Creagia\LaravelRedsys\RequestBuilder;
+use Creagia\Redsys\Enums\ConsumerLanguage;
+use Creagia\Redsys\Enums\PayMethod;
+use Creagia\Redsys\Enums\TransactionType;
+use Creagia\Redsys\Support\RequestParameters;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
+
+trait CanCreateRedsysRequests
+{
+    /**
+     * @throws UnknownProperties
+     */
+    public function createRedsysRequest(
+        PayMethod $payMethod = PayMethod::Card,
+        ConsumerLanguage $language = ConsumerLanguage::Auto,
+        ?string $productDescription = null,
+    ): RequestBuilder {
+        $currency = config('redsys.tpv.currency');
+
+        return RequestBuilder::newRequest(new RequestParameters(
+            productDescription: $productDescription,
+            amountInCents: $this->getTotalAmount(),
+            currency: $currency,
+            payMethods: $payMethod,
+            consumerLanguage: $language,
+            transactionType: TransactionType::Autorizacion,
+//            order: (string) $this->order_number,
+            merchantUrl: action(RedsysNotificationController::class),
+        ))->withModel($this);
+    }
+}

@@ -25,7 +25,7 @@ class CreateRedsysClient
         $customBaseUrl = null;
         if (config('redsys.environment') === 'local') {
             $environment = Environment::Custom;
-            $customBaseUrl = url(config('redsys.routes_prefix') . "/localGateway");
+            $customBaseUrl = url(config('redsys.routes_prefix').'/localGateway');
         } else {
             $environment = Environment::from(config('redsys.environment'));
         }

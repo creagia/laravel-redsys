@@ -15,7 +15,7 @@ just a few lines of code:
 ```php
 public function createPaymentAndRedirect()
 {
-    $redsysPayment = $yourModel->createRedsysPayment(
+    $redsysPayment = $yourModel->createRedsysRequest(
         'Product description',
         RedsysCurrency::EUR,
         RedsysConsumerLanguage::Auto,
@@ -111,7 +111,7 @@ return [
 <a name="preparing-your-model"></a>
 ### Preparing your model
 
-Add the `CanCreateRedsysPayments` trait and implement the `RedsysPayable` class to the model you would like make payable.
+Add the `CanCreateRedsysRequests` trait and implement the `RedsysPayable` class to the model you would like make payable.
 
 Typically, this model would be something like `Order` for a full ecommerce or cart system, but you can associate payments
 with multiple Eloquent models if you prefer it.
@@ -120,12 +120,11 @@ You should implement your `getTotalAmount` and `paidWithRedsys` methods. The fir
 amount for the payment. The second will be executed when Redsys confirms the payment was successful.
 
 ```php
-use Creagia\LaravelRedsys\CanCreateRedsysPayments;
-use Creagia\LaravelRedsys\RedsysPayable;
+use Creagia\LaravelRedsys\Concerns\CanCreateRedsysRequests;use Creagia\LaravelRedsys\Contracts\RedsysPayable;
 
 class YourModel extends Model implements RedsysPayable
 {
-    use CanCreateRedsysPayments;
+    use CanCreateRedsysRequests;
 
     public function getTotalAmount(): float
     {
@@ -151,7 +150,7 @@ use Creagia\Redsys\Enums\Currency;
 
 public function submit()
 {
-    $redsysPayment = $yourModel->createRedsysPayment(
+    $redsysPayment = $yourModel->createRedsysRequest(
         'Product description',
         Currency::EUR,
         ConsumerLanguage::Auto,

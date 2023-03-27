@@ -19,21 +19,21 @@ class RedsysNotificationLog extends Model
     ];
 
     /**
-     * @return BelongsTo<RedsysPayment, RedsysNotificationLog>
+     * @return BelongsTo<Request, RedsysNotificationLog>
      */
-    public function redsysPayment(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function redsysRequest(): BelongsTo
     {
-        return $this->belongsTo(RedsysPayment::class);
+        return $this->belongsTo(Request::class);
     }
 
-    public function getStatus(): RedsysPaymentStatus
+    public function getStatus(): RedsysRequestStatus
     {
         if (! isset($this->merchant_parameters['Ds_Response'])) {
-            return RedsysPaymentStatus::Pending;
+            return RedsysRequestStatus::Pending;
         }
 
         return RedsysNotification::isAuthorisedCode($this->merchant_parameters['Ds_Response'])
-            ? RedsysPaymentStatus::Paid
-            : RedsysPaymentStatus::Denied;
+            ? RedsysRequestStatus::Paid
+            : RedsysRequestStatus::Denied;
     }
 }

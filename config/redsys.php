@@ -14,6 +14,7 @@ return [
      */
     'tpv' => [
         'terminal' => env('REDSYS_TERMINAL', 1),
+        'currency' => \Creagia\Redsys\Enums\Currency::EUR,
         'merchantCode' => env('REDSYS_MERCHANT_CODE'), // Default test code: 999008881
         'key' => env('REDSYS_KEY'), // Default test key: sq7HjrUOBfKmC576ILgskD5srU870gJ7
     ],

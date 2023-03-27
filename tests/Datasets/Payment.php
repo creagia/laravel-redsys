@@ -1,11 +1,12 @@
 <?php
 
-use Creagia\Redsys\Enums\Currency;
+use Creagia\LaravelRedsys\Tests\Models\TestModel;
+use Creagia\Redsys\Enums\ConsumerLanguage;
+use Creagia\Redsys\Enums\PayMethod;
 
 dataset('payment', [
     [
-        fn () => $this->testModel = \Creagia\LaravelRedsys\Tests\Models\TestModel::create(),
-        fn () => $this->redsysPayment = $this->testModel->createRedsysPayment('Product description', Currency::EUR),
-        fn () => $this->redsysPayment->getRedsysRequest(),
+        fn () => $this->testModel = TestModel::create(),
+        fn () => $this->redsysRequestBuilder = $this->testModel->createRedsysRequest(PayMethod::Card, ConsumerLanguage::Auto, 'Product description'),
     ],
 ]);
