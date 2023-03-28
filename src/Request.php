@@ -20,7 +20,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property RedsysRequestStatus $status
  * @property string $uuid
  * @property Currency $currency
- * @property int $model_id
+ * @property ?int $model_id
+ * @property ?string $model_type
+ * @property ?int $card_request_model_id
+ * @property ?string $card_request_model_type
  * @property int $amount
  * @property PayMethod $pay_method
  * @property TransactionType $transaction_type

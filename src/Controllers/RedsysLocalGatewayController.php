@@ -41,10 +41,10 @@ class RedsysLocalGatewayController
             : redirect($params['DS_MERCHANT_URLKO']);
     }
 
-    public function rest(Request $request)
+    public function rest(Request $request): \Illuminate\Http\JsonResponse
     {
         $params = json_decode(urldecode(base64_decode(strtr($request->get('Ds_MerchantParameters'), '-_', '+/'))), true);
-        $request->responseCode = 0;
+        $request->responseCode = '0';
 
         $fakeGateway = new \Creagia\Redsys\RedsysFakeGateway(
             $request->all(),

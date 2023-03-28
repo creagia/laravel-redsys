@@ -2,8 +2,6 @@
 
 namespace Creagia\LaravelRedsys;
 
-use Creagia\LaravelRedsys\Actions\CreateRedsysClient;
-use Creagia\Redsys\RedsysRequest;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -22,11 +20,5 @@ class LaravelRedsysServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasRoute('web')
             ->hasMigration('create_redsys_payments_table');
-
-        $this->app->bind('redsys-request', function () {
-            $redsysClient = app(CreateRedsysClient::class)();
-
-            return new RedsysRequest($redsysClient);
-        });
     }
 }

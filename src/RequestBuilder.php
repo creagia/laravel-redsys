@@ -35,7 +35,7 @@ class RequestBuilder
         $this->uuid = Str::uuid();
 
         if (! $this->requestParameters->order) {
-            $this->requestParameters->order = Request::getNextOrderNumber();
+            $this->requestParameters->order = (string) Request::getNextOrderNumber();
         }
 
         if (! $this->requestParameters->merchantUrl) {
@@ -106,7 +106,7 @@ class RequestBuilder
         return $this;
     }
 
-    public function associateWithModel(Model $model)
+    public function associateWithModel(Model $model): static
     {
         $this->model = $model;
 
@@ -118,29 +118,28 @@ class RequestBuilder
         return $this->redsysRequest;
     }
 
-    private function create()
+    private function create(): void
     {
-        $this->request = new Request();
-        $this->request->uuid = $this->uuid;
-        $this->request->save_card = $this->shouldSaveCard;
-        $this->request->amount = $this->requestParameters->amountInCents;
-        $this->request->currency = $this->requestParameters->currency;
-        $this->request->pay_method = $this->requestParameters->payMethods;
-        $this->request->transaction_type = $this->requestParameters->transactionType;
-        $this->request->order_number = $this->requestParameters->order;
+        $request = new Request();
+        $request->uuid = $this->uuid;
+        $request->save_card = $this->shouldSaveCard;
+        $request->amount = $this->requestParameters->amountInCents;
+        $request->currency = $this->requestParameters->currency;
+        $request->pay_method = $this->requestParameters->payMethods;
+        $request->transaction_type = $this->requestParameters->transactionType;
+        $request->order_number = (int) $this->requestParameters->order;
 
         if ($this->model) {
-            $this->request->model_id = $this->model->getKey();
-            $this->request->model_type = $this->model::class;
+            $request->model_id = $this->model->getKey();
+            $request->model_type = $this->model::class;
         }
 
         if ($this->cardModel) {
-            $this->request->card_request_model_id = $this->cardModel->getKey();
-            $this->request->card_request_model_type = $this->cardModel::class;
+            $request->card_request_model_id = $this->cardModel->getKey();
+            $request->card_request_model_type = $this->cardModel::class;
         }
 
-        $this->request->save();
-        $this->requestParameters->order = $this->request->order_number;
+        $request->save();
     }
 
     public function redirect(): Response
@@ -150,7 +149,7 @@ class RequestBuilder
         return response($this->redsysRequest->getRedirectFormHtml());
     }
 
-    public function post()
+    public function post(): \Psr\Http\Message\ResponseInterface
     {
         $this->create();
 

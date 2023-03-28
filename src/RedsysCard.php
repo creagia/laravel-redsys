@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 /**
  * @property ?string $number
  * @property ?string $uuid
- * @property ?string $expiration_date
+ * @property ?int $expiration_date
  * @property ?string $merchant_identifier
  * @property ?string $cof_transaction_id
+ * @property ?int $model_id
+ * @property ?string $model_type
  */
 class RedsysCard extends Model
 {
@@ -24,6 +26,6 @@ class RedsysCard extends Model
 
     public function formattedExpiration(): string
     {
-        return mb_substr($this->expiration_date, 2, 2) . '/' . mb_substr($this->expiration_date, 0, 2);
+        return mb_substr((string) $this->expiration_date, 2, 2).'/'.mb_substr((string) $this->expiration_date, 0, 2);
     }
 }
