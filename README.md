@@ -137,7 +137,7 @@ Typically, this model would be something like `Order` for a full ecommerce or ca
 with multiple Eloquent models if you prefer it.
 
 You should implement your `getTotalAmount` and `paidWithRedsys` methods. The first one will return the computed total 
-amount for the payment. The second will be executed when Redsys confirms the payment was successful.
+amount for the payment **in cents**. The second will be executed when Redsys confirms the payment was successful.
 
 ```php
 use Creagia\LaravelRedsys\Concerns\CanCreateRedsysRequests;
@@ -188,7 +188,7 @@ $redsysRequestBuilder = RequestBuilder::newRequest(
     new \Creagia\Redsys\Support\RequestParameters(
         transactionType: \Creagia\Redsys\Enums\TransactionType::Autorizacion,
         productDescription: 'Description',
-        amountInCents: 12312,
+        amountInCents: 123_12,
         currency: Currency::EUR,
         payMethods: \Creagia\Redsys\Enums\PayMethod::Card,
     )
