@@ -10,6 +10,7 @@ Route::prefix(config('redsys.routes_prefix'))->group(function () {
     Route::post('notification', RedsysNotificationController::class);
 
     Route::post('localGateway/realizarPago', [RedsysLocalGatewayController::class, 'index']);
+    Route::post('localGateway/trataPeticionREST', [RedsysLocalGatewayController::class, 'rest']);
     Route::post('localGateway/post', [RedsysLocalGatewayController::class, 'post']);
 
     Route::get('successful-payment/{uuid}', RedsysSuccessfulPaymentViewController::class);

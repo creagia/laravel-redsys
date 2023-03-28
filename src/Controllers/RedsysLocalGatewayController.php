@@ -40,4 +40,21 @@ class RedsysLocalGatewayController
             ? redirect($params['DS_MERCHANT_URLOK'])
             : redirect($params['DS_MERCHANT_URLKO']);
     }
+
+    public function rest(Request $request)
+    {
+        $params = json_decode(urldecode(base64_decode(strtr($request->get('Ds_MerchantParameters'), '-_', '+/'))), true);
+        $request->responseCode = 0;
+
+        $fakeGateway = new \Creagia\Redsys\RedsysFakeGateway(
+            $request->all(),
+            config('redsys.tpv.key'),
+        );
+
+        if (isset($params['DS_MERCHANT_MERCHANTURL'])) {
+            Http::post($params['DS_MERCHANT_MERCHANTURL'], $fakeGateway->getResponse($request->responseCode));
+        }
+
+        return response()->json();
+    }
 }
