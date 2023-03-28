@@ -4,11 +4,15 @@ All notable changes to `laravel-redsys` will be documented in this file.
 
 ## 2.0.0 - xxx
 
-- New: create payments not related to Eloquent Models with RedsysPayment::createPayment()
-- New: define pay method for each Redsys Payment. Bizum.
-- Breaking: renamed RedsysNotificationAttempt to RedsysNotificationLog + database changes
-- Breaking: the payment amount is stored in cents + database changes
-- Breaking: renamed `amount` to `amountInCents` following `creagia/redsys-php`
+This version is a complete rewrite. Though there are lots of breaking changes all features of v1 are retained.
+Notable changes and additions:
+
+- New: Manage bank cards as tokens with Credential-on-File requests
+- New: Redirection and REST integration methods
+- New: Requests could be not associated to Eloquent models 
+- New: Custom request with every Redsys parameter available
+- Breaking: Currency amounts handled in cents as integer
+- Breaking: Naming for classes, methods and schema changed
 
 ## 1.1.2 - 2023-02-15
 
