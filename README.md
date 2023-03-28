@@ -24,9 +24,8 @@ just a few lines of code:
 public function createPaymentAndRedirect()
 {
     $redsysRequest = $yourModel->createRedsysRequest(
-        'Product description',
-        RedsysCurrency::EUR,
-        RedsysConsumerLanguage::Auto,
+        productDescription: 'Product description',
+        payMethod: PayMethod::Bizum,
     );
     return $redsysRequest->redirect();
 }
@@ -164,11 +163,11 @@ Create request:
 ```php
 use Creagia\Redsys\Enums\ConsumerLanguage;
 use Creagia\Redsys\Enums\Currency;
+use Creagia\Redsys\Enums\PayMethod;
 
 $redsysRequest = $yourModel->createRedsysRequest(
-    'Product description',
-    Currency::EUR,
-    ConsumerLanguage::Auto,
+    productDescription: 'Product description',
+    payMethod: PayMethod::Card,
 );
 ```
 
@@ -212,13 +211,13 @@ Once you created your Redsys request, you should send it either with redirection
 ```php
 use Creagia\Redsys\Enums\ConsumerLanguage;
 use Creagia\Redsys\Enums\Currency;
+use Creagia\Redsys\Enums\PayMethod;
 
 public function redirection()
 {
     $redsysRequest = $yourModel->createRedsysRequest(
-        'Product description',
-        Currency::EUR,
-        ConsumerLanguage::Auto,
+        productDescription: 'Product description',
+        payMethod: PayMethod::Card,
     );
     return $redsysRequest->redirect();
 }
@@ -304,6 +303,7 @@ use Creagia\Redsys\Enums\ConsumerLanguage;
 use Creagia\Redsys\Enums\Currency;
 use Creagia\Redsys\Enums\CofType;
 use Creagia\Redsys\Enums\TransactionType;
+use Creagia\Redsys\Enums\PayMethod;
 
 /**
  * Use this example to associate the request and card easily to Eloquent models
@@ -311,9 +311,8 @@ use Creagia\Redsys\Enums\TransactionType;
 public function initialRequest()
 {
     $redsysRequest = $yourProductModel->createRedsysRequest(
-        'Product description',
-        Currency::EUR,
-        ConsumerLanguage::Auto,
+        productDescription: 'Product description',
+        payMethod: PayMethod::Card,
     )->requestingCardToken(
         CofType::Recurring
     )->storeCardOnModel(
