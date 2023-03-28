@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('redsys_requests', function (Blueprint $table) {
             $table->id();
-            $table->nullableMorphs('model');
+            $table->nullableMorphs('model', 'model_morph');
             $table->boolean('save_card')->default(false);
-            $table->nullableMorphs('card_request_model');
+            $table->nullableMorphs('card_request_model', 'card_model_morph');
             $table->uuid('uuid');
             $table->enum('status', ['pending', 'denied', 'paid'])->default('pending');
             $table->bigInteger('order_number')->unique();
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->nullableMorphs('model');
             $table->uuid('uuid');
             $table->string('number');
-            $table->string('expiration_date');
+            $table->integer('expiration_date');
             $table->string('merchant_identifier');
             $table->string('cof_transaction_id')->nullable();
             $table->timestamps();
