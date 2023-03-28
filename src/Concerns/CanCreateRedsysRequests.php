@@ -2,7 +2,6 @@
 
 namespace Creagia\LaravelRedsys\Concerns;
 
-use Creagia\LaravelRedsys\Controllers\RedsysNotificationController;
 use Creagia\LaravelRedsys\RequestBuilder;
 use Creagia\Redsys\Enums\ConsumerLanguage;
 use Creagia\Redsys\Enums\PayMethod;
@@ -29,8 +28,6 @@ trait CanCreateRedsysRequests
             payMethods: $payMethod,
             consumerLanguage: $language,
             transactionType: TransactionType::Autorizacion,
-//            order: (string) $this->order_number,
-            merchantUrl: action(RedsysNotificationController::class),
-        ))->withModel($this);
+        ))->associateWithModel($this);
     }
 }

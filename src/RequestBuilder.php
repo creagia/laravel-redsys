@@ -3,6 +3,7 @@
 namespace Creagia\LaravelRedsys;
 
 use Creagia\LaravelRedsys\Actions\CreateRedsysClient;
+use Creagia\LaravelRedsys\Controllers\RedsysNotificationController;
 use Creagia\LaravelRedsys\Controllers\RedsysSuccessfulPaymentViewController;
 use Creagia\LaravelRedsys\Controllers\RedsysUnsuccessfulPaymentViewController;
 use Creagia\Redsys\Enums\CofType;
@@ -24,8 +25,6 @@ class RequestBuilder
 
     private bool $shouldSaveCard = false;
 
-    private string $order;
-
     private string $uuid;
 
     public function __construct(
@@ -33,9 +32,14 @@ class RequestBuilder
     ) {
         $this->requestParameters = $requestParameters;
         $this->uuid = Str::uuid();
-        $this->order = Request::getNextOrderNumber();
 
-        $this->requestParameters->order = $this->order;
+        if (! $this->requestParameters->order) {
+            $this->requestParameters->order = Request::getNextOrderNumber();
+        }
+
+        if (! $this->requestParameters->merchantUrl) {
+            $this->requestParameters->merchantUrl = action(RedsysNotificationController::class);
+        }
 
         if (! $this->requestParameters->urlOk) {
             $this->requestParameters->urlOk = config('redsys.successful_payment_route_name')
@@ -100,7 +104,7 @@ class RequestBuilder
         return $this;
     }
 
-    public function withModel(Model $model)
+    public function associateWithModel(Model $model)
     {
         $this->model = $model;
 
