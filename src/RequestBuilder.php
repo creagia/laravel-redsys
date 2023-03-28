@@ -7,6 +7,7 @@ use Creagia\LaravelRedsys\Controllers\RedsysNotificationController;
 use Creagia\LaravelRedsys\Controllers\RedsysSuccessfulPaymentViewController;
 use Creagia\LaravelRedsys\Controllers\RedsysUnsuccessfulPaymentViewController;
 use Creagia\Redsys\Enums\CofType;
+use Creagia\Redsys\Enums\PayMethod;
 use Creagia\Redsys\RedsysRequest;
 use Creagia\Redsys\Support\RequestParameters;
 use Illuminate\Database\Eloquent\Model;
@@ -89,6 +90,7 @@ class RequestBuilder
             $redsysCard->cof_transaction_id,
             $redsysCard->merchant_identifier,
         );
+        $this->requestParameters->payMethods = PayMethod::Card;
 
         return $this;
     }

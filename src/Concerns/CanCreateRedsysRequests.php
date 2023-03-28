@@ -2,6 +2,7 @@
 
 namespace Creagia\LaravelRedsys\Concerns;
 
+use Creagia\LaravelRedsys\Request;
 use Creagia\LaravelRedsys\RequestBuilder;
 use Creagia\Redsys\Enums\ConsumerLanguage;
 use Creagia\Redsys\Enums\PayMethod;
@@ -29,5 +30,10 @@ trait CanCreateRedsysRequests
             consumerLanguage: $language,
             transactionType: TransactionType::Autorizacion,
         ))->associateWithModel($this);
+    }
+
+    public function redsysRequests()
+    {
+        return $this->morphMany(Request::class, 'model');
     }
 }

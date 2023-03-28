@@ -8,6 +8,6 @@ trait InteractsWithRedsysCards
 {
     public function redsysCards()
     {
-        return $this->hasMany(RedsysCard::class);
+        return $this->morphMany(RedsysCard::class, 'model');
     }
 }

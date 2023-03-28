@@ -21,4 +21,9 @@ class RedsysCard extends Model
     {
         return $this->morphTo();
     }
+
+    public function formattedExpiration(): string
+    {
+        return mb_substr($this->expiration_date, 2, 2) . '/' . mb_substr($this->expiration_date, 0, 2);
+    }
 }
