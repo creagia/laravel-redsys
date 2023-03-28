@@ -152,7 +152,7 @@ class YourModel extends Model implements RedsysPayable
         return 199_99;
     }
 
-    public function paidWithRedsys()
+    public function paidWithRedsys(): void
     {
         // Notify user, change status to paid, ...
     }
