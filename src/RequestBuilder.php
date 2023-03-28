@@ -28,6 +28,8 @@ class RequestBuilder
 
     private string $uuid;
 
+    public ?Request $request = null;
+
     public function __construct(
         RequestParameters $requestParameters
     ) {
@@ -120,26 +122,26 @@ class RequestBuilder
 
     private function create(): void
     {
-        $request = new Request();
-        $request->uuid = $this->uuid;
-        $request->save_card = $this->shouldSaveCard;
-        $request->amount = $this->requestParameters->amountInCents;
-        $request->currency = $this->requestParameters->currency;
-        $request->pay_method = $this->requestParameters->payMethods;
-        $request->transaction_type = $this->requestParameters->transactionType;
-        $request->order_number = (int) $this->requestParameters->order;
+        $this->request = new Request();
+        $this->request->uuid = $this->uuid;
+        $this->request->save_card = $this->shouldSaveCard;
+        $this->request->amount = $this->requestParameters->amountInCents;
+        $this->request->currency = $this->requestParameters->currency;
+        $this->request->pay_method = $this->requestParameters->payMethods;
+        $this->request->transaction_type = $this->requestParameters->transactionType;
+        $this->request->order_number = (int) $this->requestParameters->order;
 
         if ($this->model) {
-            $request->model_id = $this->model->getKey();
-            $request->model_type = $this->model::class;
+            $this->request->model_id = $this->model->getKey();
+            $this->request->model_type = $this->model::class;
         }
 
         if ($this->cardModel) {
-            $request->card_request_model_id = $this->cardModel->getKey();
-            $request->card_request_model_type = $this->cardModel::class;
+            $this->request->card_request_model_id = $this->cardModel->getKey();
+            $this->request->card_request_model_type = $this->cardModel::class;
         }
 
-        $request->save();
+        $this->request->save();
     }
 
     public function redirect(): Response
