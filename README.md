@@ -161,8 +161,6 @@ class YourModel extends Model implements RedsysPayable
 Create request:
 
 ```php
-use Creagia\Redsys\Enums\ConsumerLanguage;
-use Creagia\Redsys\Enums\Currency;
 use Creagia\Redsys\Enums\PayMethod;
 
 $redsysRequest = $yourModel->createRedsysRequest(
@@ -209,8 +207,6 @@ can implement 'Redirection' and 'REST' methods.
 Once you created your Redsys request, you should send it either with redirection:
 
 ```php
-use Creagia\Redsys\Enums\ConsumerLanguage;
-use Creagia\Redsys\Enums\Currency;
 use Creagia\Redsys\Enums\PayMethod;
 
 public function redirection()
@@ -226,7 +222,6 @@ public function redirection()
 or send it as a POST request:
 
 ```php
-use Creagia\Redsys\Enums\ConsumerLanguage;
 use Creagia\Redsys\Enums\Currency;
 use Creagia\Redsys\Enums\TransactionType;
 use Creagia\LaravelRedsys\RequestBuilder;
@@ -299,10 +294,7 @@ class Team extends Model
 #### Initial request
 
 ```php
-use Creagia\Redsys\Enums\ConsumerLanguage;
-use Creagia\Redsys\Enums\Currency;
 use Creagia\Redsys\Enums\CofType;
-use Creagia\Redsys\Enums\TransactionType;
 use Creagia\Redsys\Enums\PayMethod;
 
 /**
@@ -345,7 +337,6 @@ public function initialCustomRequest()
 #### Future requests
 
 ```php
-use Creagia\Redsys\Enums\ConsumerLanguage;
 use Creagia\Redsys\Enums\Currency;
 use Creagia\Redsys\Enums\TransactionType;
 use Creagia\LaravelRedsys\RequestBuilder;
