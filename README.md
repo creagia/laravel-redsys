@@ -9,22 +9,30 @@
 
 Integrate your Laravel application with Redsys, the lead payment gateway in Spain.
 
+This package provides:
+- Redsys integration with Redirection and REST methods
+- Associate Redsys request with Eloquent models
+- Associate Redsys card tokens with Eloquent models
+- Management for Redsys notifications (payment confirmation)
+- Advanced custom Redsys requests that cover all features
+- Fake gateway for local testing
+
 You'll be able to create a payment request, redirect the user to the payment gateway and process Redsys response with 
 just a few lines of code:
 
 ```php
 public function createPaymentAndRedirect()
 {
-    $redsysPayment = $yourModel->createRedsysRequest(
+    $redsysRequest = $yourModel->createRedsysRequest(
         'Product description',
         RedsysCurrency::EUR,
         RedsysConsumerLanguage::Auto,
     );
-    return redirect($redsysPayment->getRedirectRoute());
+    return $redsysRequest->redirect();
 }
 ```
 
-> If you are not using Laravel framework, check our other package 
+> If you are not using Laravel, check our other package 
 > **[creagia/redsys-php](https://github.com/creagia/redsys-php)** for just a Redsys PHP library.
 
 ## Support us
