@@ -33,7 +33,8 @@ class RedsysLocalGatewayController
         );
 
         if (isset($params['DS_MERCHANT_MERCHANTURL'])) {
-            Http::post($params['DS_MERCHANT_MERCHANTURL'], $fakeGateway->getResponse($request->responseCode));
+            Http::withoutVerifying()
+                ->post($params['DS_MERCHANT_MERCHANTURL'], $fakeGateway->getResponse($request->responseCode));
         }
 
         return $authorised
