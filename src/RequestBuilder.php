@@ -18,7 +18,7 @@ class RequestBuilder
 {
     private ?RedsysRequest $redsysRequest;
 
-    private RequestParameters $requestParameters;
+    public RequestParameters $requestParameters;
 
     private ?Model $model = null;
 
