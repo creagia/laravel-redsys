@@ -32,7 +32,8 @@ return [
     'unsuccessful_payment_route_name' => env('REDSYS_UNSUCCESSFUL_ROUTE_NAME', null),
 
     /**
-     * Redsys order number should be unique. You can set the starting order number here if you need it.
+     * Redsys order number should be unique. Here you can set an order number prefix if you need it.
+     * This prefix must be an integer number.
      */
-    'min_order_num' => env('REDSYS_MIN_ORDER_NUM', 0),
+    'order_num_prefix' => env('REDSYS_ORDER_NUM_PREFIX', 0),
 ];

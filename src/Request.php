@@ -73,15 +73,19 @@ class Request extends Model
 
     public static function getNextOrderNumber(): int
     {
-        $minNumber = date('ym').config('redsys.min_order_num').'00000';
-        $last = Request::query()
+        $minNumber = str(intval(config('redsys.order_num_prefix')))
+            ->padRight(12, 0)
+            ->toInteger();
+
+        $lastNumber = Request::query()
             ->latest('order_number')
             ->where('order_number', '>', $minNumber)
             ->first();
-        if (! $last) {
-            return intval($minNumber) + 1;
+
+        if ($lastNumber) {
+            return $lastNumber->order_number + 1;
         }
 
-        return $last->order_number + 1;
+        return $minNumber + 1;
     }
 }
