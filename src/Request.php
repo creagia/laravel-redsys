@@ -9,6 +9,7 @@ use Creagia\Redsys\Enums\TransactionType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Str;
 
 /**
  * @property \Carbon\Carbon $created_at
@@ -73,9 +74,11 @@ class Request extends Model
 
     public static function getNextOrderNumber(): int
     {
-        $minNumber = str(intval(config('redsys.order_num_prefix')))
-            ->padRight(12, 0)
-            ->toInteger();
+        $minNumber = intval(Str::padRight(
+            config('redsys.order_num_prefix'),
+            12,
+            '0'
+        ));
 
         $lastNumber = Request::query()
             ->latest('order_number')
