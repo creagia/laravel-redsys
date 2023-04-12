@@ -74,8 +74,12 @@ class Request extends Model
 
     public static function getNextOrderNumber(): int
     {
+        $prefix = config('redsys.order_num_auto_prefix')
+            ? date('ym')
+            : '';
+
         $minNumber = intval(Str::padRight(
-            config('redsys.order_num_prefix'),
+            $prefix . config('redsys.order_num_prefix'),
             12,
             '0'
         ));

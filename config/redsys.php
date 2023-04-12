@@ -32,6 +32,11 @@ return [
     'unsuccessful_payment_route_name' => env('REDSYS_UNSUCCESSFUL_ROUTE_NAME', null),
 
     /**
+     * Use an automatic prefix for the order number with the current year and month.
+     */
+    'order_num_auto_prefix' => true,
+
+    /**
      * Redsys order number should be unique. Here you can set an order number prefix if you need it.
      * This prefix must be an integer number.
      */
