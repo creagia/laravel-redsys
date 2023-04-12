@@ -79,7 +79,7 @@ class Request extends Model
             : '';
 
         $minNumber = intval(Str::padRight(
-            $prefix . config('redsys.order_num_prefix'),
+            $prefix.config('redsys.order_num_prefix'),
             12,
             '0'
         ));
