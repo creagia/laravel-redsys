@@ -74,7 +74,7 @@ class Request extends Model
 
     public static function getNextOrderNumber(): int
     {
-        $prefix = config('redsys.order_num_auto_prefix')
+        $prefix = config('redsys.order_num_auto_prefix', true)
             ? date('ym')
             : '';
 
