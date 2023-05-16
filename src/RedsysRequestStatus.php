@@ -2,7 +2,7 @@
 
 namespace Creagia\LaravelRedsys;
 
-enum RedsysPaymentStatus: string
+enum RedsysRequestStatus: string
 {
     case Pending = 'pending';
     case Denied = 'denied';

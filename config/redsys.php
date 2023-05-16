@@ -14,6 +14,7 @@ return [
      */
     'tpv' => [
         'terminal' => env('REDSYS_TERMINAL', 1),
+        'currency' => \Creagia\Redsys\Enums\Currency::EUR,
         'merchantCode' => env('REDSYS_MERCHANT_CODE'), // Default test code: 999008881
         'key' => env('REDSYS_KEY'), // Default test key: sq7HjrUOBfKmC576ILgskD5srU870gJ7
     ],
@@ -31,7 +32,13 @@ return [
     'unsuccessful_payment_route_name' => env('REDSYS_UNSUCCESSFUL_ROUTE_NAME', null),
 
     /**
-     * Redsys order number should be unique. You can set the starting order number here if you need it.
+     * Use an automatic prefix for the order number with the current year and month.
      */
-    'min_order_num' => env('REDSYS_MIN_ORDER_NUM', 0),
+    'order_num_auto_prefix' => true,
+
+    /**
+     * Redsys order number should be unique. Here you can set an order number prefix if you need it.
+     * This prefix must be an integer number.
+     */
+    'order_num_prefix' => env('REDSYS_ORDER_NUM_PREFIX', 0),
 ];

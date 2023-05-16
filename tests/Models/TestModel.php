@@ -2,22 +2,22 @@
 
 namespace Creagia\LaravelRedsys\Tests\Models;
 
-use Creagia\LaravelRedsys\CanCreateRedsysPayments;
-use Creagia\LaravelRedsys\RedsysPayable;
+use Creagia\LaravelRedsys\Concerns\CanCreateRedsysRequests;
+use Creagia\LaravelRedsys\Contracts\RedsysPayable;
 use Illuminate\Database\Eloquent\Model;
 
 class TestModel extends Model implements RedsysPayable
 {
-    use CanCreateRedsysPayments;
+    use CanCreateRedsysRequests;
 
     protected $guarded = [];
 
-    public function getTotalAmount(): float
+    public function getTotalAmount(): int
     {
-        return 123.45;
+        return 123_45;
     }
 
-    public function paidWithRedsys()
+    public function paidWithRedsys(): void
     {
         $this->status = 'paid';
         $this->save();

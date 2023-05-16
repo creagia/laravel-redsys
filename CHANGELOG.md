@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-redsys` will be documented in this file.
 
+## 2.0.0 - 2023-05-16
+
+This version is a complete rewrite. Though there are lots of breaking changes, all features of v1 are retained.
+Notable changes and additions:
+
+- New: Manage bank cards as tokens with Credential-on-File requests
+- New: Redirection and REST integration methods
+- New: Requests could be not associated to Eloquent models 
+- New: Custom request with every Redsys parameter available
+- Breaking: Currency amounts handled in cents as integer
+- Breaking: Naming for classes, methods and schema changed
+
 ## 1.1.2 - 2023-02-15
 
 ### What's Changed

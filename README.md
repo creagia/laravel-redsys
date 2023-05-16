@@ -2,12 +2,20 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/creagia/laravel-redsys.svg?style=flat-square)](https://packagist.org/packages/creagia/laravel-redsys)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/creagia/laravel-redsys/run-tests.yml?label=tests)](https://github.com/creagia/laravel-redsys/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/creagia/laravel-redsys/php-cs-fixer.yml?label=code%20style)](https://github.com/creagia/laravel-redsys/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/creagia/laravel-redsys/fix-php-code-style-issues.yml?label=code%20style)](https://github.com/creagia/laravel-redsys/actions/workflows/fix-php-code-style-issues.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/creagia/laravel-redsys.svg?style=flat-square)](https://packagist.org/packages/creagia/laravel-redsys)
 
 ## Introduction
 
 Integrate your Laravel application with Redsys, the lead payment gateway in Spain.
+
+This package provides:
+- Redsys integration with Redirection and REST methods
+- Associate Redsys request with Eloquent models
+- Associate Redsys card tokens with Eloquent models
+- Management for Redsys notifications (payment confirmation)
+- Advanced custom Redsys requests that cover all features
+- Fake gateway for local testing
 
 You'll be able to create a payment request, redirect the user to the payment gateway and process Redsys response with 
 just a few lines of code:
@@ -15,17 +23,16 @@ just a few lines of code:
 ```php
 public function createPaymentAndRedirect()
 {
-    $redsysPayment = $yourModel->createRedsysPayment(
-        'Product description',
-        RedsysCurrency::EUR,
-        RedsysConsumerLanguage::Auto,
+    $redsysRequest = $yourModel->createRedsysRequest(
+        productDescription: 'Product description',
+        payMethod: PayMethod::Bizum,
     );
-    return redirect($redsysPayment->getRedirectRoute());
+    return $redsysRequest->redirect();
 }
 ```
 
-> If you are not using Laravel framework or prefer a different approach than associating payments to Eloquent models, 
-> check our other package **[creagia/redsys-php](https://github.com/creagia/redsys-php)** for just a Redsys PHP library.
+> If you are not using Laravel, check our other package 
+> **[creagia/redsys-php](https://github.com/creagia/redsys-php)** for just a Redsys PHP library.
 
 ## Support us
 [<img width="570" alt="Laradir banner" src="https://user-images.githubusercontent.com/240932/189903723-2c015907-b8c9-4ff7-b6e6-2c8cf10aea16.png">](https://laradir.com/?utm_campaign=github&utm_medium=banner&utm_term=laravel-redsys)
@@ -76,6 +83,7 @@ return [
      */
     'tpv' => [
         'terminal' => env('REDSYS_TERMINAL', 1),
+        'currency' => \Creagia\Redsys\Enums\Currency::EUR,
         'merchantCode' => env('REDSYS_MERCHANT_CODE'), // Default test code: 999008881
         'key' => env('REDSYS_KEY'), // Default test key: sq7HjrUOBfKmC576ILgskD5srU870gJ7
     ],
@@ -91,82 +99,165 @@ return [
      */
     'successful_payment_route_name' => env('REDSYS_SUCCESSFUL_ROUTE_NAME', null),
     'unsuccessful_payment_route_name' => env('REDSYS_UNSUCCESSFUL_ROUTE_NAME', null),
+    
+    /**
+     * Use an automatic prefix for the order number with the current year and month.
+     */
+    'order_num_auto_prefix' => true,
 
     /**
-     * Redsys order number should be unique. You can set the starting order number here if you need it.
+     * Redsys order number should be unique. Here you can set an order number prefix if you need it.
+     * This prefix must be an integer number.
      */
-    'min_order_num' => env('REDSYS_MIN_ORDER_NUM', 0),
+    'order_num_prefix' => env('REDSYS_ORDER_NUM_PREFIX', 0),
 ];
 ```
 
 ## Usage
 
-* [Preparing your model](#preparing-your-model)
-* [Redirecting to Redsys](#redirecting-to-redsys)
-* [Redirect to website](#redirect-to-website)
+* [Introduction](#introduction)
+* [Associate requests with Eloquent models](#associate-with-models)
+* [Custom Redsys requests](#custom-redsys-requests)
+* [Sending requests to Redsys](#redirecting-to-redsys)
+* [Credential-On-File requests](#cof-requests)
 * [Local Gateway](#local-gateway)
 * [Unsuccessful or abandoned payments](#unsuccessful-or-abandoned-payments)
 * [Events](#events)
 
-<a name="preparing-your-model"></a>
-### Preparing your model
+<a name="introduction"></a>
+### Introduction
 
-Add the `CanCreateRedsysPayments` trait and implement the `RedsysPayable` class to the model you would like make payable.
+This packages integrates [redsys-php](https://github.com/creagia/redsys-php) with your Laravel application.
+You can use it in two different ways:
+
+- [Associating requests with Eloquent models](#associate-with-models)
+- [Creating standalone Redsys requests](#standalone-redsys-requests)
+
+<a name="associate-with-models"></a>
+### Associate requests with Eloquent models
+
+Add the `CanCreateRedsysRequests` trait and implement the `RedsysPayable` class to the model you would like make payable.
 
 Typically, this model would be something like `Order` for a full ecommerce or cart system, but you can associate payments
 with multiple Eloquent models if you prefer it.
 
 You should implement your `getTotalAmount` and `paidWithRedsys` methods. The first one will return the computed total 
-amount for the payment. The second will be executed when Redsys confirms the payment was successful.
+amount for the payment **in cents**. The second will be executed when Redsys confirms the payment was successful.
 
 ```php
-use Creagia\LaravelRedsys\CanCreateRedsysPayments;
-use Creagia\LaravelRedsys\RedsysPayable;
+use Creagia\LaravelRedsys\Concerns\CanCreateRedsysRequests;
+use Creagia\LaravelRedsys\Contracts\RedsysPayable;
 
 class YourModel extends Model implements RedsysPayable
 {
-    use CanCreateRedsysPayments;
+    use CanCreateRedsysRequests;
 
-    public function getTotalAmount(): float
+    public function getTotalAmount(): int
     {
-        return 10;
+        return 199_99;
     }
 
-    public function paidWithRedsys()
+    public function paidWithRedsys(): void
     {
         // Notify user, change status to paid, ...
     }
 }
 ```
 
-<a name="redirecting-to-redsys"></a>
-### Redirecting to Redsys
-
-Once you configured your payable model, you can create a new payment and redirect the user to the Redsys payment page. 
-Typically, that will happen in the last step of your cart or form:
+Create request:
 
 ```php
-use Creagia\Redsys\Enums\ConsumerLanguage;
-use Creagia\Redsys\Enums\Currency;
+use Creagia\Redsys\Enums\PayMethod;
 
-public function submit()
+$redsysRequest = $yourModel->createRedsysRequest(
+    productDescription: 'Product description',
+    payMethod: PayMethod::Card,
+);
+```
+
+<a name="custom-redsys-requests"></a>
+### Custom Redsys requests
+
+If you prefer to not associate a Redsys request to an Eloquent model, or you need to create a more complex request,
+you can create a custom request easily.
+
+This way you can totally customize the request and implement every Redsys feature available. The request input 
+parameters are defined with a `RequestParameters` object that implements all the [available parameters](https://pagosonline.redsys.es/parametros-entrada-salida.html)
+
+```php
+use Creagia\LaravelRedsys\RequestBuilder;
+
+$redsysRequestBuilder = RequestBuilder::newRequest(
+    new \Creagia\Redsys\Support\RequestParameters(
+        transactionType: \Creagia\Redsys\Enums\TransactionType::Autorizacion,
+        productDescription: 'Description',
+        amountInCents: 123_12,
+        currency: Currency::EUR,
+        payMethods: \Creagia\Redsys\Enums\PayMethod::Card,
+    )
+);
+```
+
+The `RequestBuilder` has some middle methods to help you create your requests. You can associate your custom request
+with an eloquent model using the `associateWithModel()` method and interact with credit card tokens with `requestingCardToken()`
+or `usingCardToken()` methods. Check the [Credential-On-File requests](#cof-requests) section to know more about it.
+
+After creating the request you should continue on the next section to send the request to Redsys.
+
+<a name="redirecting-to-redsys"></a>
+### Sending requests to Redsys
+
+From all the [integration methods](https://pagosonline.redsys.es/modelos-de-integracion.html) available on Redsys, you 
+can implement 'Redirection' and 'REST' methods.
+
+Once you created your Redsys request, you should send it either with redirection:
+
+```php
+use Creagia\Redsys\Enums\PayMethod;
+
+public function redirection()
 {
-    $redsysPayment = $yourModel->createRedsysPayment(
-        'Product description',
-        Currency::EUR,
-        ConsumerLanguage::Auto,
+    $redsysRequest = $yourModel->createRedsysRequest(
+        productDescription: 'Product description',
+        payMethod: PayMethod::Card,
     );
-    return redirect($redsysPayment->getRedirectRoute());
+    return $redsysRequest->redirect();
 }
 ```
 
-Redsys notification with the result of the payment will be automatically managed by the package. For successful payments, 
-the package will execute the `paidWithRedsys` method from your model.
+or send it as a POST request:
 
-<a name="redirect-to-web"></a>
-### Redirect to website
+```php
+use Creagia\Redsys\Enums\Currency;
+use Creagia\Redsys\Enums\TransactionType;
+use Creagia\LaravelRedsys\RequestBuilder;
+use Illuminate\Database\Eloquent\Model;
 
-Once the client has finished the payment process, Redsys will redirect him to your website. By default, this package serves
+public function cancellation(Model $yourModel)
+{
+    $redsysRequest = RequestBuilder::newRequest(new RequestParameters(
+        amountInCents: $yourModel->getTotalAmount(),
+        currency: Currency::EUR,
+        order: '1446068581',
+        transactionType: TransactionType::Anulacion,
+    ))->associateWithModel($yourModel);
+
+    return $redsysRequest->post();
+}
+```
+
+> Keep in mind that the REST integration mode is not available for all features and is not always enabled by default.
+Always check the Redsys documentation and your account configuration if you are not sure if you can use it or
+something is not working.
+
+#### Redsys response
+
+Redsys notification with the request result will be automatically managed by the package. For successful payments, 
+the package will run the `paidWithRedsys` method from your model.
+
+#### Redirect users back
+
+In the redirection method, when the client has finished, Redsys will redirect they to your website. By default, this package serves
 a successful or unsuccessful route with a pretty simple view. You can override redirect routes on the config file:
 
 ```php
@@ -175,6 +266,108 @@ a successful or unsuccessful route with a pretty simple view. You can override r
 ```
 
 <p align="center"><img src="/art/default-redirect-view.png" alt="Successful default view"></p>
+
+<a name="cof-requests"></a>
+### Credential-On-File (token) requests
+
+[Credential-On-File](https://pagosonline.redsys.es/funcionalidades-COF.html) requests uses authorized stored card
+data to create future requests after an initial one. This is useful for a few use cases like subscriptions with
+recurring payments or installments for individual payments.
+
+While you can create [Credential-On-File](https://pagosonline.redsys.es/funcionalidades-COF.html) with a
+[custom Redsys request](#standalone-redsys-requests) as defined on Redsys documentation, this packages provides
+some helpers to make it easier.
+
+Credential-On-File transactions require an initial request where you ask for a card token. After that, you can
+create new requests with the card token stored on your application.
+
+#### Prepare your Eloquent model
+
+Use the `InteractsWithRedsysCards` concern on the model you want to associate with Redsys card tokens. Typically
+this model will be `User`, `Team` or `Subscription`, for example.
+
+```php
+use Creagia\LaravelRedsys\Concerns\InteractsWithRedsysCards;
+
+class Team extends Model
+{
+    use InteractsWithRedsysCards;
+
+    ...
+}
+```
+
+#### Initial request
+
+```php
+use Creagia\Redsys\Enums\CofType;
+use Creagia\Redsys\Enums\PayMethod;
+
+/**
+ * Use this example to associate the request and card easily to Eloquent models
+ */
+public function initialRequest()
+{
+    $redsysRequest = $yourProductModel->createRedsysRequest(
+        productDescription: 'Product description',
+        payMethod: PayMethod::Card,
+    )->requestingCardToken(
+        CofType::Recurring
+    )->storeCardOnModel(
+        $yourPayingModel // User, Team, ...
+    );
+    
+    return $redsysRequest->redirect();
+}
+
+/**
+ * Use this example for a custom request, optionally associating the request to Eloquent models
+ */
+public function initialCustomRequest()
+{
+    $redsysRequest = RequestBuilder::newRequest(new RequestParameters(
+        amountInCents: 19_99,
+        currency: Currency::EUR,
+        transactionType: TransactionType::Autorizacion,
+    ))->associateWithModel(
+        $yourProductModel
+    )->requestingCardToken(
+        CofType::Recurring
+    )->storeCardOnModel(
+        $yourPayingModel // User, Team, ...
+    );
+    return $redsysRequest->redirect();
+}
+```
+
+#### Future requests
+
+```php
+use Creagia\Redsys\Enums\Currency;
+use Creagia\Redsys\Enums\TransactionType;
+use Creagia\LaravelRedsys\RequestBuilder;
+use Illuminate\Database\Eloquent\Model;
+use Creagia\Redsys\Enums\CofType;
+
+public function renewSubscription(Model $yourProductModel, Model $yourPayingModel)
+{
+    $redsysCard = $yourPayingModel->redsysCards->last();  // User, Team, ...
+    
+    $redsysRequest = RequestBuilder::newRequest(new RequestParameters(
+        amountInCents: $yourProductModel->getTotalAmount(),
+        currency: Currency::EUR,
+        transactionType: TransactionType::Autorizacion,
+    ))
+        ->associateWithModel(
+            $yourProductModel
+        )->usingCard(
+            CofType::Recurring, 
+            $redsysCard,
+        );
+
+    return $redsysRequest->post();
+}
+```
 
 <a name="local-gateway"></a>
 ### Local Gateway

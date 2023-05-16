@@ -5,12 +5,12 @@ namespace Creagia\LaravelRedsys\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Creagia\LaravelRedsys\RedsysPayment
+ * @mixin \Creagia\Redsys\RedsysRequest
  */
-class RedsysPayment extends Facade
+class RedsysRequest extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'laravel-redsys';
+        return 'redsys-request';
     }
 }

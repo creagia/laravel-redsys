@@ -6,7 +6,6 @@ use Creagia\LaravelRedsys\Events\RedsysSuccessfulEvent;
 use Creagia\LaravelRedsys\Events\RedsysUnsuccessfulEvent;
 use Creagia\Redsys\Exceptions\InvalidRedsysNotification;
 use Illuminate\Support\Facades\Event;
-
 use function Pest\Laravel\post;
 use function Pest\Laravel\withoutExceptionHandling;
 
@@ -24,52 +23,63 @@ it('throws exception if bank response is invalid', function () {
     post(action(RedsysNotificationController::class), ['Ds_MerchantParameters' => '']);
 })->throws(InvalidRedsysNotification::class);
 
-it('saves notification attempt to database', function ($testModel, $redsysPayment, $redsysRequest) {
+it('saves notification attempt to database', function ($testModel, $redsysRequestBuilder) {
+    $redirectResponse = $redsysRequestBuilder->redirect();
+
     $fakeGateway = new \Creagia\Redsys\RedsysFakeGateway(
-        $redsysRequest->getRequestFieldsArray(),
+        $redsysRequestBuilder->getRequest()->getRequestFieldsArray(),
         config('redsys.tpv.key'),
     );
 
-    post(action(RedsysNotificationController::class), $fakeGateway->getResponse("0000"));
+    post(action(RedsysNotificationController::class), $fakeGateway->getResponse('0000'));
 
-    $this->assertDatabaseHas((new \Creagia\LaravelRedsys\RedsysNotificationAttempt())->getTable(), [
-        'redsys_payment_id' => $redsysPayment->id,
+    $this->assertDatabaseHas((new \Creagia\LaravelRedsys\RedsysNotificationLog())->getTable(), [
+        'redsys_request_id' => $redsysRequestBuilder->request->id,
     ]);
 })->with('payment');
 
-it('changes Redsys payment status to paid', function ($testModel, $redsysPayment, $redsysRequest) {
+it('changes Redsys payment status to paid', function ($testModel, $redsysRequestBuilder) {
+    $redirectResponse = $redsysRequestBuilder->redirect();
+    $request = $redsysRequestBuilder->request;
+
     $fakeGateway = new \Creagia\Redsys\RedsysFakeGateway(
-        $redsysRequest->getRequestFieldsArray(),
+        $redsysRequestBuilder->getRequest()->getRequestFieldsArray(),
         config('redsys.tpv.key'),
     );
 
-    post(action(RedsysNotificationController::class), $fakeGateway->getResponse("0000"));
+    post(action(RedsysNotificationController::class), $fakeGateway->getResponse('0000'));
 
-    $redsysPayment->refresh();
-    expect($redsysPayment->status)->toBe(\Creagia\LaravelRedsys\RedsysPaymentStatus::Paid->value);
+    $request->refresh();
+    expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Paid->value);
 })->with('payment');
 
-it('changes Redsys payment status to denied', function ($testModel, $redsysPayment, $redsysRequest) {
+it('changes Redsys payment status to denied', function ($testModel, $redsysRequestBuilder) {
+    $redirectResponse = $redsysRequestBuilder->redirect();
+    $request = $redsysRequestBuilder->request;
+
     $fakeGateway = new \Creagia\Redsys\RedsysFakeGateway(
-        $redsysRequest->getRequestFieldsArray(),
+        $redsysRequestBuilder->getRequest()->getRequestFieldsArray(),
         config('redsys.tpv.key'),
     );
 
-    post(action(RedsysNotificationController::class), $fakeGateway->getResponse("0184"));
+    post(action(RedsysNotificationController::class), $fakeGateway->getResponse('0184'));
 
-    $redsysPayment->refresh();
-    expect($redsysPayment->status)->toBe(\Creagia\LaravelRedsys\RedsysPaymentStatus::Denied->value);
+    $request->refresh();
+    expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Denied->value);
 })->with('payment');
 
-it('executes payable model paid method', function ($testModel, $redsysPayment, $redsysRequest) {
+it('executes payable model paid method', function ($testModel, $redsysRequestBuilder) {
+    $redirectResponse = $redsysRequestBuilder->redirect();
+    $request = $redsysRequestBuilder->request;
+
     $fakeGateway = new \Creagia\Redsys\RedsysFakeGateway(
-        $redsysRequest->getRequestFieldsArray(),
+        $redsysRequestBuilder->getRequest()->getRequestFieldsArray(),
         config('redsys.tpv.key'),
     );
 
-    post(action(RedsysNotificationController::class), $fakeGateway->getResponse("0000"));
+    post(action(RedsysNotificationController::class), $fakeGateway->getResponse('0000'));
 
-    $redsysPayment->refresh();
-    expect($redsysPayment->status)->toBe(\Creagia\LaravelRedsys\RedsysPaymentStatus::Paid->value);
-    expect($redsysPayment->model->status)->toBe('paid');
+    $request->refresh();
+    expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Paid->value);
+    expect($request->model->status)->toBe('paid');
 })->with('payment');

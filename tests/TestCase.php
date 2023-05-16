@@ -39,16 +39,15 @@ class TestCase extends Orchestra
      * Define routes setup.
      *
      * @param  \Illuminate\Routing\Router  $router
-     *
      * @return void
      */
     protected function defineRoutes($router)
     {
         $router->get('okroute/{redsysPayment:uuid}', function () {
-            echo "ok";
+            echo 'ok';
         })->name('okroute');
         $router->get('koroute/{redsysPayment:uuid}', function () {
-            echo "ko";
+            echo 'ko';
         })->name('koroute');
     }
 }

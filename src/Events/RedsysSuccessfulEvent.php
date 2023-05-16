@@ -2,7 +2,7 @@
 
 namespace Creagia\LaravelRedsys\Events;
 
-use Creagia\LaravelRedsys\RedsysPayment;
+use Creagia\LaravelRedsys\Request;
 use Illuminate\Foundation\Events\Dispatchable;
 
 class RedsysSuccessfulEvent
@@ -10,7 +10,7 @@ class RedsysSuccessfulEvent
     use Dispatchable;
 
     public function __construct(
-        public RedsysPayment $redsysPayment,
+        public Request $redsysPayment,
         public array $notificationData,
     ) {
     }

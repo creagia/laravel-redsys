@@ -2,12 +2,13 @@
 
 namespace Creagia\LaravelRedsys\Tests;
 
-use Creagia\LaravelRedsys\RedsysPayment;
+use Creagia\LaravelRedsys\RequestBuilder;
+use Creagia\LaravelRedsys\Tests\Models\TestModel;
 
-it('can return total amount', function ($testModel, $redsysPayment) {
-    expect($testModel->getTotalAmount())->toEqual(123.45);
+it('can return total amount', function (TestModel $testModel) {
+    expect($testModel->getTotalAmount())->toEqual(12345);
 })->with('payment');
 
-it('can create a redsys payment', function ($testModel, $redsysPayment) {
-    expect($redsysPayment::class)->toBe(RedsysPayment::class);
+it('can create a redsys payment', function (TestModel $testModel, RequestBuilder $requestBuilder) {
+    expect($requestBuilder::class)->toBe(RequestBuilder::class);
 })->with('payment');
