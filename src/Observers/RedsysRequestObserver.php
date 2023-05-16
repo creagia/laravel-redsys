@@ -9,7 +9,7 @@ class RedsysRequestObserver
 {
     public function creating(Request $tpvOrder): void
     {
-//        $tpvOrder->order_number = Request::getNextOrderNumber();
-//        $tpvOrder->uuid = Str::uuid();
+        //        $tpvOrder->order_number = Request::getNextOrderNumber();
+        //        $tpvOrder->uuid = Str::uuid();
     }
 }
