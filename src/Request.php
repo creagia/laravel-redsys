@@ -79,9 +79,9 @@ class Request extends Model
             : '';
 
         $minNumber = intval(Str::padRight(
-            $prefix.config('redsys.order_num_prefix'),
-            12,
-            '0'
+            value: $prefix.config('redsys.order_num_prefix'),
+            length: 12,
+            pad: '0',
         ));
 
         $lastNumber = Request::query()

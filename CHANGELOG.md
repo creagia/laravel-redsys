@@ -2,9 +2,9 @@
 
 All notable changes to `laravel-redsys` will be documented in this file.
 
-## 2.0.0 - xxx
+## 2.0.0 - 2023-05-16
 
-This version is a complete rewrite. Though there are lots of breaking changes all features of v1 are retained.
+This version is a complete rewrite. Though there are lots of breaking changes, all features of v1 are retained.
 Notable changes and additions:
 
 - New: Manage bank cards as tokens with Credential-on-File requests
