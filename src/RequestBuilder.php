@@ -9,6 +9,7 @@ use Creagia\LaravelRedsys\Controllers\RedsysUnsuccessfulPaymentViewController;
 use Creagia\Redsys\Enums\CofType;
 use Creagia\Redsys\Enums\PayMethod;
 use Creagia\Redsys\RedsysRequest;
+use Creagia\LaravelRedsys\Request;
 use Creagia\Redsys\Support\RequestParameters;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
@@ -36,21 +37,21 @@ class RequestBuilder
         $this->requestParameters = $requestParameters;
         $this->uuid = Str::uuid();
 
-        if (! $this->requestParameters->order) {
+        if (!$this->requestParameters->order) {
             $this->requestParameters->order = (string) Request::getNextOrderNumber();
         }
 
-        if (! $this->requestParameters->merchantUrl) {
+        if (!$this->requestParameters->merchantUrl) {
             $this->requestParameters->merchantUrl = action(RedsysNotificationController::class);
         }
 
-        if (! $this->requestParameters->urlOk) {
+        if (!$this->requestParameters->urlOk) {
             $this->requestParameters->urlOk = config('redsys.successful_payment_route_name')
                 ? route(config('redsys.successful_payment_route_name'), $this->uuid)
                 : action(RedsysSuccessfulPaymentViewController::class, $this->uuid);
         }
 
-        if (! $this->requestParameters->urlKo) {
+        if (!$this->requestParameters->urlKo) {
             $this->requestParameters->urlKo = config('redsys.successful_payment_route_name')
                 ? route(config('redsys.unsuccessful_payment_route_name'), $this->uuid)
                 : action(RedsysUnsuccessfulPaymentViewController::class, $this->uuid);
@@ -122,26 +123,30 @@ class RequestBuilder
 
     private function create(): void
     {
-        $this->request = new Request();
-        $this->request->uuid = $this->uuid;
-        $this->request->save_card = $this->shouldSaveCard;
-        $this->request->amount = $this->requestParameters->amountInCents;
-        $this->request->currency = $this->requestParameters->currency;
-        $this->request->pay_method = $this->requestParameters->payMethods;
-        $this->request->transaction_type = $this->requestParameters->transactionType;
-        $this->request->order_number = (int) $this->requestParameters->order;
+        $orderNumber = (int) $this->requestParameters->order;
+        $exist = Request::where('order_number', $orderNumber)->first();
+        if (!$exist) {
+            $this->request = new Request();
+            $this->request->uuid = $this->uuid;
+            $this->request->save_card = $this->shouldSaveCard;
+            $this->request->amount = $this->requestParameters->amountInCents;
+            $this->request->currency = $this->requestParameters->currency;
+            $this->request->pay_method = $this->requestParameters->payMethods;
+            $this->request->transaction_type = $this->requestParameters->transactionType;
+            $this->request->order_number = $orderNumber;
 
-        if ($this->model) {
-            $this->request->model_id = $this->model->getKey();
-            $this->request->model_type = $this->model::class;
+            if ($this->model) {
+                $this->request->model_id = $this->model->getKey();
+                $this->request->model_type = $this->model::class;
+            }
+
+            if ($this->cardModel) {
+                $this->request->card_request_model_id = $this->cardModel->getKey();
+                $this->request->card_request_model_type = $this->cardModel::class;
+            }
+
+            $this->request->save();
         }
-
-        if ($this->cardModel) {
-            $this->request->card_request_model_id = $this->cardModel->getKey();
-            $this->request->card_request_model_type = $this->cardModel::class;
-        }
-
-        $this->request->save();
     }
 
     public function redirect(): Response
