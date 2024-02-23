@@ -30,7 +30,7 @@ return new class extends Migration
             $table->id();
             $table->nullableMorphs('model');
             $table->uuid('uuid');
-            $table->string('number');
+            $table->string('number')->nullable();
             $table->integer('expiration_date');
             $table->string('merchant_identifier');
             $table->string('cof_transaction_id')->nullable();
