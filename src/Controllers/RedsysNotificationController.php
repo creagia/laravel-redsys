@@ -33,54 +33,60 @@ class RedsysNotificationController
 
         $request = Request::where('order_number', $redsysNotification->parameters->order)->first();
 
-        if (! $request) {
+        if (!$request) {
             throw new RedsysRequestNotFound('Redsys Request not found from bank response');
         }
 
-        $redsysNotificationLog->redsysRequest()->associate($request);
-        $redsysNotificationLog->save();
-
-        $request->response_code = $redsysNotification->parameters->responseCode ?? null;
-        $request->auth_code = (empty($authCode = trim($redsysNotification->parameters->responseAuthorisationCode))) ? null : $authCode;
-
-        try {
-            $notificationData = $redsysNotification->checkResponse();
-
-            RedsysSuccessfulEvent::dispatch($request, $notificationData->toArray());
-            $request->status = RedsysRequestStatus::Paid;
-
+        if ($request->status == RedsysRequestStatus::Paid->value) {
+            $request->status = RedsysRequestStatus::Refunded;
             $request->save();
+        } else {
 
-            if ($request->model) {
-                $request->model->paidWithRedsys();
-            }
+            $redsysNotificationLog->redsysRequest()->associate($request);
+            $redsysNotificationLog->save();
 
-            if (
-                $request->save_card
-                and filled($notificationData->merchantIdentifier)
-                and filled($notificationData->cofTransactionId)
-            ) {
-                $redsysCard = new RedsysCard();
-                $redsysCard->uuid = Str::uuid();
-                $redsysCard->number = $notificationData->cardNumber;
-                $redsysCard->expiration_date = $notificationData->cardExpiryDate;
-                $redsysCard->merchant_identifier = $notificationData->merchantIdentifier;
-                $redsysCard->cof_transaction_id = $notificationData->cofTransactionId;
+            $request->response_code = $redsysNotification->parameters->responseCode ?? null;
+            $request->auth_code = (empty($authCode = trim($redsysNotification->parameters->responseAuthorisationCode))) ? null : $authCode;
 
-                if ($request->card_request_model_id) {
-                    $redsysCard->model_id = $request->card_request_model_id;
-                    $redsysCard->model_type = $request->card_request_model_type;
+            try {
+                $notificationData = $redsysNotification->checkResponse();
+
+                RedsysSuccessfulEvent::dispatch($request, $notificationData->toArray());
+                $request->status = RedsysRequestStatus::Paid;
+
+                $request->save();
+
+                if ($request->model) {
+                    $request->model->paidWithRedsys();
                 }
 
-                $redsysCard->save();
-            }
-        } catch (DeniedRedsysPaymentNotification $e) {
-            $errorMessage = $e->getMessage();
-            RedsysUnsuccessfulEvent::dispatch($request, $errorMessage);
+                if (
+                    $request->save_card
+                    and filled($notificationData->merchantIdentifier)
+                    and filled($notificationData->cofTransactionId)
+                ) {
+                    $redsysCard = new RedsysCard();
+                    $redsysCard->uuid = Str::uuid();
+                    $redsysCard->number = $notificationData->cardNumber;
+                    $redsysCard->expiration_date = $notificationData->cardExpiryDate;
+                    $redsysCard->merchant_identifier = $notificationData->merchantIdentifier;
+                    $redsysCard->cof_transaction_id = $notificationData->cofTransactionId;
 
-            $request->status = RedsysRequestStatus::Denied;
-            $request->response_message = $errorMessage;
-            $request->save();
+                    if ($request->card_request_model_id) {
+                        $redsysCard->model_id = $request->card_request_model_id;
+                        $redsysCard->model_type = $request->card_request_model_type;
+                    }
+
+                    $redsysCard->save();
+                }
+            } catch (DeniedRedsysPaymentNotification $e) {
+                $errorMessage = $e->getMessage();
+                RedsysUnsuccessfulEvent::dispatch($request, $errorMessage);
+
+                $request->status = RedsysRequestStatus::Denied;
+                $request->response_message = $errorMessage;
+                $request->save();
+            }
         }
     }
 }
