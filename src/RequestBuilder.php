@@ -59,18 +59,10 @@ class RequestBuilder
                 : action(RedsysUnsuccessfulPaymentViewController::class, $this->uuid);
         }
 
-        if ($redsysClient) {
-            $this->redsysRequest = RedsysRequest::create(
-                $redsysClient,
-                $requestParameters,
-            );
-        } else {
-            $createClient = app(CreateRedsysClient::class);
-            $this->redsysRequest = RedsysRequest::create(
-                $createClient(),
-                $requestParameters,
-            );
-        }
+        $this->redsysRequest = RedsysRequest::create(
+            redsysClient: $redsysClient ?? (app(CreateRedsysClient::class))(),
+            requestParameters: $requestParameters,
+        );
     }
 
     public static function newRequest(RequestParameters $requestParameters, ?RedsysClient $redsysClient = null): RequestBuilder
