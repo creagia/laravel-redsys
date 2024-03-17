@@ -1,6 +1,7 @@
 <?php
 
 use Creagia\Redsys\Enums\Currency;
+
 use function Pest\Laravel\withoutExceptionHandling;
 
 it('can redirect to Redsys with standalone payment', function () {
