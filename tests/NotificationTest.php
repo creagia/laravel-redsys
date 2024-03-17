@@ -4,8 +4,11 @@ use Creagia\LaravelRedsys\Controllers\RedsysNotificationController;
 use Creagia\LaravelRedsys\Events\RedsysNotificationEvent;
 use Creagia\LaravelRedsys\Events\RedsysSuccessfulEvent;
 use Creagia\LaravelRedsys\Events\RedsysUnsuccessfulEvent;
-use Creagia\Redsys\Exceptions\InvalidRedsysNotification;
+use Creagia\LaravelRedsys\RequestBuilder;
+use Creagia\LaravelRedsys\Tests\Models\TestModel;
+use Creagia\Redsys\Exceptions\InvalidRedsysResponseException;
 use Illuminate\Support\Facades\Event;
+
 use function Pest\Laravel\post;
 use function Pest\Laravel\withoutExceptionHandling;
 
@@ -21,9 +24,9 @@ test('notification controller fires event on bank notification', function () {
 it('throws exception if bank response is invalid', function () {
     withoutExceptionHandling();
     post(action(RedsysNotificationController::class), ['Ds_MerchantParameters' => '']);
-})->throws(InvalidRedsysNotification::class);
+})->throws(InvalidRedsysResponseException::class);
 
-it('saves notification attempt to database', function ($testModel, $redsysRequestBuilder) {
+it('saves notification attempt to database', function (TestModel $testModel, RequestBuilder $redsysRequestBuilder) {
     $redirectResponse = $redsysRequestBuilder->redirect();
 
     $fakeGateway = new \Creagia\Redsys\RedsysFakeGateway(
@@ -38,7 +41,7 @@ it('saves notification attempt to database', function ($testModel, $redsysReques
     ]);
 })->with('payment');
 
-it('changes Redsys payment status to paid', function ($testModel, $redsysRequestBuilder) {
+it('changes Redsys payment status to paid', function (TestModel $testModel, RequestBuilder $redsysRequestBuilder) {
     $redirectResponse = $redsysRequestBuilder->redirect();
     $request = $redsysRequestBuilder->request;
 
@@ -53,7 +56,7 @@ it('changes Redsys payment status to paid', function ($testModel, $redsysRequest
     expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Paid->value);
 })->with('payment');
 
-it('changes Redsys payment status to denied', function ($testModel, $redsysRequestBuilder) {
+it('changes Redsys payment status to denied', function (TestModel $testModel, RequestBuilder $redsysRequestBuilder) {
     $redirectResponse = $redsysRequestBuilder->redirect();
     $request = $redsysRequestBuilder->request;
 
@@ -68,7 +71,7 @@ it('changes Redsys payment status to denied', function ($testModel, $redsysReque
     expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Denied->value);
 })->with('payment');
 
-it('executes payable model paid method', function ($testModel, $redsysRequestBuilder) {
+it('executes payable model paid method', function (TestModel $testModel, RequestBuilder $redsysRequestBuilder) {
     $redirectResponse = $redsysRequestBuilder->redirect();
     $request = $redsysRequestBuilder->request;
 

@@ -8,9 +8,10 @@ use Creagia\LaravelRedsys\Tests\Models\TestModel;
 use Creagia\Redsys\Enums\ConsumerLanguage;
 use Creagia\Redsys\Enums\PayMethod;
 use Illuminate\Support\Facades\Config;
+
 use function Pest\Laravel\withoutExceptionHandling;
 
-it('can redirect to Redsys', function ($testModel, RequestBuilder $redsysRequestBuilder) {
+it('can redirect to Redsys', function (TestModel $testModel, RequestBuilder $redsysRequestBuilder) {
     withoutExceptionHandling();
     $redirectResponse = $redsysRequestBuilder->redirect();
     expect($redirectResponse->content())->toContain('realizarPago');
