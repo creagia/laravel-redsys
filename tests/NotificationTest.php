@@ -5,6 +5,7 @@ use Creagia\LaravelRedsys\Events\RedsysNotificationEvent;
 use Creagia\LaravelRedsys\Events\RedsysSuccessfulEvent;
 use Creagia\LaravelRedsys\Events\RedsysUnsuccessfulEvent;
 use Creagia\Redsys\Exceptions\InvalidRedsysNotification;
+use Creagia\Redsys\Exceptions\InvalidRedsysResponseException;
 use Illuminate\Support\Facades\Event;
 use function Pest\Laravel\post;
 use function Pest\Laravel\withoutExceptionHandling;
@@ -21,7 +22,7 @@ test('notification controller fires event on bank notification', function () {
 it('throws exception if bank response is invalid', function () {
     withoutExceptionHandling();
     post(action(RedsysNotificationController::class), ['Ds_MerchantParameters' => '']);
-})->throws(InvalidRedsysNotification::class);
+})->throws(InvalidRedsysResponseException::class);
 
 it('saves notification attempt to database', function ($testModel, $redsysRequestBuilder) {
     $redirectResponse = $redsysRequestBuilder->redirect();
