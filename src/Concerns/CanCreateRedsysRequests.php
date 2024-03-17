@@ -8,13 +8,9 @@ use Creagia\Redsys\Enums\ConsumerLanguage;
 use Creagia\Redsys\Enums\PayMethod;
 use Creagia\Redsys\Enums\TransactionType;
 use Creagia\Redsys\Support\RequestParameters;
-use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 trait CanCreateRedsysRequests
 {
-    /**
-     * @throws UnknownProperties
-     */
     public function createRedsysRequest(
         PayMethod $payMethod = PayMethod::Card,
         ConsumerLanguage $language = ConsumerLanguage::Auto,
