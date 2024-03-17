@@ -8,12 +8,12 @@ use Creagia\LaravelRedsys\Controllers\RedsysSuccessfulPaymentViewController;
 use Creagia\LaravelRedsys\Controllers\RedsysUnsuccessfulPaymentViewController;
 use Creagia\Redsys\Enums\CofType;
 use Creagia\Redsys\Enums\PayMethod;
+use Creagia\Redsys\RedsysClient;
 use Creagia\Redsys\RedsysRequest;
 use Creagia\Redsys\Support\RequestParameters;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
-use Creagia\Redsys\RedsysClient;
 
 class RequestBuilder
 {
@@ -33,27 +33,27 @@ class RequestBuilder
 
     public function __construct(
         RequestParameters $requestParameters,
-        RedsysClient $redsysClient = null
+        ?RedsysClient $redsysClient = null
 
     ) {
         $this->requestParameters = $requestParameters;
         $this->uuid = Str::uuid();
 
-        if (!$this->requestParameters->order) {
+        if (! $this->requestParameters->order) {
             $this->requestParameters->order = (string) Request::getNextOrderNumber();
         }
 
-        if (!$this->requestParameters->merchantUrl) {
+        if (! $this->requestParameters->merchantUrl) {
             $this->requestParameters->merchantUrl = action(RedsysNotificationController::class);
         }
 
-        if (!$this->requestParameters->urlOk) {
+        if (! $this->requestParameters->urlOk) {
             $this->requestParameters->urlOk = config('redsys.successful_payment_route_name')
                 ? route(config('redsys.successful_payment_route_name'), $this->uuid)
                 : action(RedsysSuccessfulPaymentViewController::class, $this->uuid);
         }
 
-        if (!$this->requestParameters->urlKo) {
+        if (! $this->requestParameters->urlKo) {
             $this->requestParameters->urlKo = config('redsys.successful_payment_route_name')
                 ? route(config('redsys.unsuccessful_payment_route_name'), $this->uuid)
                 : action(RedsysUnsuccessfulPaymentViewController::class, $this->uuid);
@@ -73,7 +73,7 @@ class RequestBuilder
         }
     }
 
-    public static function newRequest(RequestParameters $requestParameters, RedsysClient $redsysClient = null): RequestBuilder
+    public static function newRequest(RequestParameters $requestParameters, ?RedsysClient $redsysClient = null): RequestBuilder
     {
         return new RequestBuilder(
             $requestParameters,
