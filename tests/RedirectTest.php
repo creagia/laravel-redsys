@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Config;
 
 use function Pest\Laravel\withoutExceptionHandling;
 
-it('can redirect to Redsys', function ($testModel, RequestBuilder $redsysRequestBuilder) {
+it('can redirect to Redsys', function (TestModel $testModel, RequestBuilder $redsysRequestBuilder) {
     withoutExceptionHandling();
     $redirectResponse = $redsysRequestBuilder->redirect();
     expect($redirectResponse->content())->toContain('realizarPago');
