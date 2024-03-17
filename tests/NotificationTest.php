@@ -4,9 +4,9 @@ use Creagia\LaravelRedsys\Controllers\RedsysNotificationController;
 use Creagia\LaravelRedsys\Events\RedsysNotificationEvent;
 use Creagia\LaravelRedsys\Events\RedsysSuccessfulEvent;
 use Creagia\LaravelRedsys\Events\RedsysUnsuccessfulEvent;
-use Creagia\Redsys\Exceptions\InvalidRedsysNotification;
 use Creagia\Redsys\Exceptions\InvalidRedsysResponseException;
 use Illuminate\Support\Facades\Event;
+
 use function Pest\Laravel\post;
 use function Pest\Laravel\withoutExceptionHandling;
 
