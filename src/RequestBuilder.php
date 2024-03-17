@@ -8,7 +8,6 @@ use Creagia\LaravelRedsys\Controllers\RedsysSuccessfulPaymentViewController;
 use Creagia\LaravelRedsys\Controllers\RedsysUnsuccessfulPaymentViewController;
 use Creagia\Redsys\Enums\CofType;
 use Creagia\Redsys\Enums\PayMethod;
-use Creagia\Redsys\RedsysClient;
 use Creagia\Redsys\RedsysRequest;
 use Creagia\Redsys\Support\RequestParameters;
 use Illuminate\Database\Eloquent\Model;
@@ -32,9 +31,7 @@ class RequestBuilder
     public ?Request $request = null;
 
     public function __construct(
-        RequestParameters $requestParameters,
-        ?RedsysClient $redsysClient = null
-
+        RequestParameters $requestParameters
     ) {
         $this->requestParameters = $requestParameters;
         $this->uuid = Str::uuid();
@@ -59,17 +56,17 @@ class RequestBuilder
                 : action(RedsysUnsuccessfulPaymentViewController::class, $this->uuid);
         }
 
+        $createClient = app(CreateRedsysClient::class);
         $this->redsysRequest = RedsysRequest::create(
-            redsysClient: $redsysClient ?? (app(CreateRedsysClient::class))(),
-            requestParameters: $requestParameters,
+            $createClient(),
+            $requestParameters,
         );
     }
 
-    public static function newRequest(RequestParameters $requestParameters, ?RedsysClient $redsysClient = null): RequestBuilder
+    public static function newRequest(RequestParameters $requestParameters): RequestBuilder
     {
         return new RequestBuilder(
-            $requestParameters,
-            $redsysClient
+            $requestParameters
         );
     }
 
