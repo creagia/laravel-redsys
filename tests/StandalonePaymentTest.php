@@ -16,4 +16,4 @@ it('can redirect to Redsys with standalone payment', function () {
         )
     );
     expect($redsysRequest->redirect()->content())->toContain('realizarPago');
-})->with('payment');
+});
