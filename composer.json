@@ -19,8 +19,8 @@
     ],
     "require": {
         "php": "^8.1",
-        "creagia/redsys-php": "^2.0",
-        "illuminate/contracts": "^8.73|^9.0|^10.0",
+        "creagia/redsys-php": "v3.x-dev",
+        "illuminate/contracts": "^8.73|^9.0|^10.0|^11.0",
         "spatie/laravel-package-tools": "^1.9.2"
     },
     "require-dev": {
