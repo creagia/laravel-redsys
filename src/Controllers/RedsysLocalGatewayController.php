@@ -2,7 +2,7 @@
 
 namespace Creagia\LaravelRedsys\Controllers;
 
-use Creagia\Redsys\RedsysNotification;
+use Creagia\Redsys\RedsysResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -25,7 +25,7 @@ class RedsysLocalGatewayController
     public function post(Request $request): \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
     {
         $params = json_decode(urldecode(base64_decode(strtr($request->get('Ds_MerchantParameters'), '-_', '+/'))), true);
-        $authorised = RedsysNotification::isAuthorisedCode((int) $request->responseCode);
+        $authorised = RedsysResponse::isAuthorisedCode((int) $request->responseCode);
 
         $fakeGateway = new \Creagia\Redsys\RedsysFakeGateway(
             $request->all(),

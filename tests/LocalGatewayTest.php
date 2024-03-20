@@ -7,6 +7,7 @@ use Creagia\LaravelRedsys\RequestBuilder;
 use Creagia\LaravelRedsys\Tests\Models\TestModel;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+
 use function Pest\Laravel\post;
 use function Pest\Laravel\withoutExceptionHandling;
 

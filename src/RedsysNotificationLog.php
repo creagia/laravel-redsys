@@ -2,7 +2,7 @@
 
 namespace Creagia\LaravelRedsys;
 
-use Creagia\Redsys\RedsysNotification;
+use Creagia\Redsys\RedsysResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -32,7 +32,7 @@ class RedsysNotificationLog extends Model
             return RedsysRequestStatus::Pending;
         }
 
-        return RedsysNotification::isAuthorisedCode($this->merchant_parameters['Ds_Response'])
+        return RedsysResponse::isAuthorisedCode($this->merchant_parameters['Ds_Response'])
             ? RedsysRequestStatus::Paid
             : RedsysRequestStatus::Denied;
     }

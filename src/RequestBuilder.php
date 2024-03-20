@@ -151,7 +151,7 @@ class RequestBuilder
         return response($this->redsysRequest->getRedirectFormHtml());
     }
 
-    public function post(): \Psr\Http\Message\ResponseInterface
+    public function post(): \Creagia\Redsys\Support\NotificationParameters|\Creagia\Redsys\Support\PostRequestError
     {
         $this->create();
 
