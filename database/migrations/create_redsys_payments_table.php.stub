@@ -44,4 +44,11 @@ return new class extends Migration
             $table->timestamps();
          });
     }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('redsys_requests');
+        Schema::dropIfExists('redsys_cards');
+        Schema::dropIfExists('redsys_notification_logs');
+    }
 };
