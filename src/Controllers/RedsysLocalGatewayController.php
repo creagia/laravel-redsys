@@ -33,8 +33,13 @@ class RedsysLocalGatewayController
         );
 
         if (isset($params['DS_MERCHANT_MERCHANTURL'])) {
-            Http::withoutVerifying()
-                ->post($params['DS_MERCHANT_MERCHANTURL'], $fakeGateway->getResponse($request->responseCode));
+            // https://stackoverflow.com/questions/61703814/guzzle-cannot-send-a-web-request-to-the-same-server
+            $request = Request::create(
+                $params['DS_MERCHANT_MERCHANTURL'],
+                'POST',
+                $fakeGateway->getResponse($request->responseCode)
+            );
+            app()->handle($request);
         }
 
         return $authorised
@@ -53,7 +58,13 @@ class RedsysLocalGatewayController
         );
 
         if (isset($params['DS_MERCHANT_MERCHANTURL'])) {
-            Http::post($params['DS_MERCHANT_MERCHANTURL'], $fakeGateway->getResponse($request->responseCode));
+            // https://stackoverflow.com/questions/61703814/guzzle-cannot-send-a-web-request-to-the-same-server
+            $request = Request::create(
+                $params['DS_MERCHANT_MERCHANTURL'],
+                'POST',
+                $fakeGateway->getResponse($request->responseCode)
+            );
+            app()->handle($request);
         }
 
         return response()->json();
