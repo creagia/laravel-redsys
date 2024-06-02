@@ -4,6 +4,7 @@ All notable changes to `laravel-redsys` will be documented in this file.
 
 ## 3.0.0 - 2024-06-02
 
+- New: Local gateway is refactored to work with Sail, `artisan serve` or any other single threaded server.
 - New: Improved REST integration with handled responses.
 - Breaking: Updated database schema to allow different transaction types (refunds for example) with the same order number.
 
