@@ -4,7 +4,6 @@ namespace Creagia\LaravelRedsys\Controllers;
 
 use Creagia\Redsys\RedsysResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class RedsysLocalGatewayController
 {
