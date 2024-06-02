@@ -19,8 +19,7 @@ class HandleRedsysResponse
     public function __invoke(
         ?Request $request,
         RedsysResponse|PostRequestError $response,
-    )
-    {
+    ) {
         $redsysNotificationLog = RedsysNotificationLog::create([
             'merchant_parameters' => $response instanceof PostRequestError
                 ? $response->responseParameters

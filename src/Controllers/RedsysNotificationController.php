@@ -5,20 +5,14 @@ namespace Creagia\LaravelRedsys\Controllers;
 use Creagia\LaravelRedsys\Actions\CreateRedsysClient;
 use Creagia\LaravelRedsys\Actions\HandleRedsysResponse;
 use Creagia\LaravelRedsys\Events\RedsysNotificationEvent;
-use Creagia\LaravelRedsys\Events\RedsysSuccessfulEvent;
-use Creagia\LaravelRedsys\Events\RedsysUnsuccessfulEvent;
 use Creagia\LaravelRedsys\Exceptions\RedsysConfigError;
 use Creagia\LaravelRedsys\Exceptions\RedsysRequestNotFound;
-use Creagia\LaravelRedsys\RedsysCard;
-use Creagia\LaravelRedsys\RedsysNotificationLog;
-use Creagia\LaravelRedsys\RedsysRequestStatus;
 use Creagia\LaravelRedsys\Request;
 use Creagia\Redsys\Exceptions\DeniedRedsysPaymentResponseException;
 use Creagia\Redsys\Exceptions\ErrorRedsysResponseException;
 use Creagia\Redsys\Exceptions\InvalidRedsysResponseException;
 use Creagia\Redsys\RedsysResponse;
 use Illuminate\Http\Request as HttpRequest;
-use Illuminate\Support\Str;
 
 class RedsysNotificationController
 {
