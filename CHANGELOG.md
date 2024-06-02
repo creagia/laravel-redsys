@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-redsys` will be documented in this file.
 
+## 3.0.0 - 2024-06-02
+
+- New: Improved REST integration with handled responses.
+- Breaking: Updated database schema to allow different transaction types (refunds for example) with the same order number.
+
+Updated main dependency:
+
+- Breaking: creagia/redsys-php v3 compatibility. Check the [changelog](https://github.com/creagia/redsys-php/blob/main/CHANGELOG.md).
+
 ## 2.0.0 - 2023-05-16
 
 This version is a complete rewrite. Though there are lots of breaking changes, all features of v1 are retained.

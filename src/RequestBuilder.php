@@ -3,12 +3,15 @@
 namespace Creagia\LaravelRedsys;
 
 use Creagia\LaravelRedsys\Actions\CreateRedsysClient;
+use Creagia\LaravelRedsys\Actions\HandleRedsysResponse;
 use Creagia\LaravelRedsys\Controllers\RedsysNotificationController;
 use Creagia\LaravelRedsys\Controllers\RedsysSuccessfulPaymentViewController;
 use Creagia\LaravelRedsys\Controllers\RedsysUnsuccessfulPaymentViewController;
 use Creagia\Redsys\Enums\CofType;
 use Creagia\Redsys\Enums\PayMethod;
 use Creagia\Redsys\RedsysRequest;
+use Creagia\Redsys\RedsysResponse;
+use Creagia\Redsys\Support\PostRequestError;
 use Creagia\Redsys\Support\RequestParameters;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
@@ -30,9 +33,12 @@ class RequestBuilder
 
     public ?Request $request = null;
 
+    private HandleRedsysResponse $handleRedsysResponse;
+
     public function __construct(
-        RequestParameters $requestParameters
+        RequestParameters $requestParameters,
     ) {
+        $this->handleRedsysResponse = app(HandleRedsysResponse::class);
         $this->requestParameters = $requestParameters;
         $this->uuid = Str::uuid();
 
@@ -151,10 +157,17 @@ class RequestBuilder
         return response($this->redsysRequest->getRedirectFormHtml());
     }
 
-    public function post(): \Creagia\Redsys\Support\NotificationParameters|\Creagia\Redsys\Support\PostRequestError
+    public function post(): RedsysResponse|PostRequestError
     {
         $this->create();
 
-        return $this->redsysRequest->sendPostRequest();
+        $response = $this->redsysRequest->sendPostRequest();
+
+        ($this->handleRedsysResponse)(
+            request: $this->request,
+            response: $response,
+        );
+
+        return $response;
     }
 }

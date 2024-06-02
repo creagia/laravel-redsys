@@ -1,5 +1,14 @@
 # Upgrading
 
+## From v2 to v3
+
+Breaking changes:
+- `RedsysRequestStatus` cases have been renamed from Denied/Paid to Error/Success.
+- Database table `redsys_requests` has been updated with:
+  - Rename `status` enum column options to `['pending', 'error', 'success']`
+  - Drop `order_number` unique foreign.
+  - Change `pay_method` column to nullable.
+
 ## From v1 to v2
 
 Version 2.x is a complete rewrite, so there isn't a step-by-step upgrade guide. We recommend you to read the updated docs
