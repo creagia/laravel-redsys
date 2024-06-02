@@ -53,7 +53,7 @@ it('changes Redsys payment status to paid', function (TestModel $testModel, Requ
     post(action(RedsysNotificationController::class), $fakeGateway->getResponse('0000'));
 
     $request->refresh();
-    expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Paid->value);
+    expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Success->value);
 })->with('payment');
 
 it('changes Redsys payment status to denied', function (TestModel $testModel, RequestBuilder $redsysRequestBuilder) {
@@ -68,7 +68,7 @@ it('changes Redsys payment status to denied', function (TestModel $testModel, Re
     post(action(RedsysNotificationController::class), $fakeGateway->getResponse('0184'));
 
     $request->refresh();
-    expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Denied->value);
+    expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Error->value);
 })->with('payment');
 
 it('executes payable model paid method', function (TestModel $testModel, RequestBuilder $redsysRequestBuilder) {
@@ -83,6 +83,6 @@ it('executes payable model paid method', function (TestModel $testModel, Request
     post(action(RedsysNotificationController::class), $fakeGateway->getResponse('0000'));
 
     $request->refresh();
-    expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Paid->value);
+    expect($request->status)->toBe(\Creagia\LaravelRedsys\RedsysRequestStatus::Success->value);
     expect($request->model->status)->toBe('paid');
 })->with('payment');

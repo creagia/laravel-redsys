@@ -33,7 +33,7 @@ class RedsysNotificationLog extends Model
         }
 
         return RedsysResponse::isAuthorisedCode($this->merchant_parameters['Ds_Response'])
-            ? RedsysRequestStatus::Paid
-            : RedsysRequestStatus::Denied;
+            ? RedsysRequestStatus::Success
+            : RedsysRequestStatus::Error;
     }
 }

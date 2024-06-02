@@ -14,11 +14,11 @@ return new class extends Migration
             $table->boolean('save_card')->default(false);
             $table->nullableMorphs('card_request_model', 'card_model_morph');
             $table->uuid('uuid');
-            $table->enum('status', ['pending', 'denied', 'paid'])->default('pending');
-            $table->bigInteger('order_number')->unique();
+            $table->enum('status', ['pending', 'error', 'success'])->default('pending');
+            $table->bigInteger('order_number');
             $table->bigInteger('amount');
             $table->integer('currency');
-            $table->string('pay_method');
+            $table->string('pay_method')->nullable();
             $table->string('transaction_type');
             $table->string('response_code')->nullable();
             $table->text('response_message')->nullable();
