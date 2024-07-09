@@ -2,6 +2,4 @@
 
 namespace Creagia\LaravelRedsys\Exceptions;
 
-class RedsysRequestNotFound extends \Exception
-{
-}
+class RedsysRequestNotFound extends \Exception {}

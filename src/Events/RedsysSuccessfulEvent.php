@@ -12,6 +12,5 @@ class RedsysSuccessfulEvent
     public function __construct(
         public Request $redsysPayment,
         public array $notificationData,
-    ) {
-    }
+    ) {}
 }

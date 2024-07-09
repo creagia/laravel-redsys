@@ -18,8 +18,7 @@ class RedsysNotificationController
 {
     public function __construct(
         private HandleRedsysResponse $handleRedsysResponse,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws DeniedRedsysPaymentResponseException

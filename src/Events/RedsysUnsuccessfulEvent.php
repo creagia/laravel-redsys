@@ -12,6 +12,5 @@ class RedsysUnsuccessfulEvent
     public function __construct(
         public Request $redsysPayment,
         public string $errorMessage,
-    ) {
-    }
+    ) {}
 }

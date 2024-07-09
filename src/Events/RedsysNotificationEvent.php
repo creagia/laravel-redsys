@@ -10,6 +10,5 @@ class RedsysNotificationEvent
 
     public function __construct(
         public array $fields,
-    ) {
-    }
+    ) {}
 }
