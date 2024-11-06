@@ -57,7 +57,7 @@ class RequestBuilder
         }
 
         if (! $this->requestParameters->urlKo) {
-            $this->requestParameters->urlKo = config('redsys.successful_payment_route_name')
+            $this->requestParameters->urlKo = config('redsys.unsuccessful_payment_route_name')
                 ? route(config('redsys.unsuccessful_payment_route_name'), $this->uuid)
                 : action(RedsysUnsuccessfulPaymentViewController::class, $this->uuid);
         }
