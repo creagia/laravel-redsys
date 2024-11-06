@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class RedsysCard extends Model
 {
     /**
-     * @return MorphTo<Model, RedsysCard>
+     * @return MorphTo<Model, $this>
      */
     public function model(): MorphTo
     {

@@ -49,7 +49,7 @@ class Request extends Model
     }
 
     /**
-     * @return MorphTo<Model, Request>
+     * @return MorphTo<Model, $this>
      */
     public function model(): MorphTo
     {
@@ -57,7 +57,7 @@ class Request extends Model
     }
 
     /**
-     * @return MorphTo<Model, Request>
+     * @return MorphTo<Model, $this>
      */
     public function cardModel(): MorphTo
     {
@@ -65,7 +65,7 @@ class Request extends Model
     }
 
     /**
-     * @return HasMany<RedsysNotificationLog>
+     * @return HasMany<RedsysNotificationLog, $this>
      */
     public function notificationLogs(): HasMany
     {
