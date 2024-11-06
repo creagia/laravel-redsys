@@ -128,7 +128,7 @@ class RequestBuilder
 
     private function create(): void
     {
-        $this->request = new Request();
+        $this->request = new Request;
         $this->request->uuid = $this->uuid;
         $this->request->save_card = $this->shouldSaveCard;
         $this->request->amount = $this->requestParameters->amountInCents;

@@ -36,7 +36,7 @@ it('saves notification attempt to database', function (TestModel $testModel, Req
 
     post(action(RedsysNotificationController::class), $fakeGateway->getResponse('0000'));
 
-    $this->assertDatabaseHas((new \Creagia\LaravelRedsys\RedsysNotificationLog())->getTable(), [
+    $this->assertDatabaseHas((new \Creagia\LaravelRedsys\RedsysNotificationLog)->getTable(), [
         'redsys_request_id' => $redsysRequestBuilder->request->id,
     ]);
 })->with('payment');

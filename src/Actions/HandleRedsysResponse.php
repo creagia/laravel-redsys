@@ -65,7 +65,7 @@ class HandleRedsysResponse
                 and filled($notificationData->merchantIdentifier)
                 and filled($notificationData->cofTransactionId)
             ) {
-                $redsysCard = new RedsysCard();
+                $redsysCard = new RedsysCard;
                 $redsysCard->uuid = Str::uuid();
                 $redsysCard->number = $notificationData->cardNumber;
                 $redsysCard->expiration_date = $notificationData->cardExpiryDate;
