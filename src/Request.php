@@ -2,6 +2,7 @@
 
 namespace Creagia\LaravelRedsys;
 
+use Creagia\LaravelRedsys\Contracts\RedsysPayable;
 use Creagia\LaravelRedsys\Observers\RedsysRequestObserver;
 use Creagia\Redsys\Enums\Currency;
 use Creagia\Redsys\Enums\PayMethod;
@@ -28,6 +29,7 @@ use Illuminate\Support\Str;
  * @property int $amount
  * @property PayMethod $pay_method
  * @property TransactionType $transaction_type
+ * @property-read RedsysPayable|Model|null $model
  */
 class Request extends Model
 {

@@ -56,7 +56,7 @@ class HandleRedsysResponse
             $request->status = RedsysRequestStatus::Success;
             $request->save();
 
-            if ($request->model) {
+            if ($request->model && method_exists($request->model, 'paidWithRedsys')) {
                 $request->model->paidWithRedsys();
             }
 
