@@ -2,6 +2,7 @@
 
 namespace Creagia\LaravelRedsys\Actions;
 
+use Creagia\LaravelRedsys\Contracts\RedsysPayable;
 use Creagia\LaravelRedsys\Events\RedsysSuccessfulEvent;
 use Creagia\LaravelRedsys\Events\RedsysUnsuccessfulEvent;
 use Creagia\LaravelRedsys\Exceptions\RedsysRequestNotFound;
@@ -56,7 +57,7 @@ class HandleRedsysResponse
             $request->status = RedsysRequestStatus::Success;
             $request->save();
 
-            if ($request->model && method_exists($request->model, 'paidWithRedsys')) {
+            if ($request->model instanceof RedsysPayable) {
                 $request->model->paidWithRedsys();
             }
 

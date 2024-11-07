@@ -9,6 +9,9 @@ class RedsysSuccessfulEvent
 {
     use Dispatchable;
 
+    /**
+     * @param  array<string, string>  $notificationData
+     */
     public function __construct(
         public Request $redsysPayment,
         public array $notificationData,
