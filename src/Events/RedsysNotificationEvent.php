@@ -8,6 +8,9 @@ class RedsysNotificationEvent
 {
     use Dispatchable;
 
+    /**
+     * @param  array<string, string>  $fields
+     */
     public function __construct(
         public array $fields,
     ) {}

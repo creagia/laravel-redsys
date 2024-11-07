@@ -19,7 +19,7 @@ class RedsysNotificationLog extends Model
     ];
 
     /**
-     * @return BelongsTo<Request, RedsysNotificationLog>
+     * @return BelongsTo<Request, $this>
      */
     public function redsysRequest(): BelongsTo
     {

@@ -2,6 +2,7 @@
 
 namespace Creagia\LaravelRedsys;
 
+use Creagia\LaravelRedsys\Contracts\RedsysPayable;
 use Creagia\LaravelRedsys\Observers\RedsysRequestObserver;
 use Creagia\Redsys\Enums\Currency;
 use Creagia\Redsys\Enums\PayMethod;
@@ -28,6 +29,7 @@ use Illuminate\Support\Str;
  * @property int $amount
  * @property PayMethod $pay_method
  * @property TransactionType $transaction_type
+ * @property-read RedsysPayable|Model|null $model
  */
 class Request extends Model
 {
@@ -49,7 +51,7 @@ class Request extends Model
     }
 
     /**
-     * @return MorphTo<Model, Request>
+     * @return MorphTo<Model, $this>
      */
     public function model(): MorphTo
     {
@@ -57,7 +59,7 @@ class Request extends Model
     }
 
     /**
-     * @return MorphTo<Model, Request>
+     * @return MorphTo<Model, $this>
      */
     public function cardModel(): MorphTo
     {
@@ -65,7 +67,7 @@ class Request extends Model
     }
 
     /**
-     * @return HasMany<RedsysNotificationLog>
+     * @return HasMany<RedsysNotificationLog, $this>
      */
     public function notificationLogs(): HasMany
     {
