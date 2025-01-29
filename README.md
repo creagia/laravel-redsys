@@ -34,9 +34,6 @@ public function createPaymentAndRedirect()
 > If you are not using Laravel, check our other package 
 > **[creagia/redsys-php](https://github.com/creagia/redsys-php)** for just a Redsys PHP library.
 
-## Support us
-[<img width="570" alt="Laradir banner" src="https://user-images.githubusercontent.com/240932/189903723-2c015907-b8c9-4ff7-b6e6-2c8cf10aea16.png">](https://laradir.com/?utm_campaign=github&utm_medium=banner&utm_term=laravel-redsys)
-
 ## Installation
 
 You can install the package via composer:
