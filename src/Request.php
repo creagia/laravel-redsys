@@ -2,6 +2,7 @@
 
 namespace Creagia\LaravelRedsys;
 
+use Carbon\Carbon;
 use Creagia\LaravelRedsys\Contracts\RedsysPayable;
 use Creagia\LaravelRedsys\Observers\RedsysRequestObserver;
 use Creagia\Redsys\Enums\Currency;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Str;
 
 /**
- * @property \Carbon\Carbon $created_at
+ * @property Carbon $created_at
  * @property bool $save_card
  * @property int $order_number
  * @property ?string $response_code

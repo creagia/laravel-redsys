@@ -2,12 +2,17 @@
 
 namespace Creagia\LaravelRedsys\Controllers;
 
+use Creagia\Redsys\RedsysFakeGateway;
 use Creagia\Redsys\RedsysResponse;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 
 class RedsysLocalGatewayController
 {
-    public function index(Request $request): \Illuminate\Contracts\View\View
+    public function index(Request $request): View
     {
         if (! app()->environment('local')) {
             throw new \Exception('Local Gateway is only available on local environment. Update your .env file.');
@@ -21,12 +26,12 @@ class RedsysLocalGatewayController
         ]);
     }
 
-    public function post(Request $request): \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+    public function post(Request $request): RedirectResponse|Redirector
     {
         $params = json_decode(urldecode(base64_decode(strtr($request->get('Ds_MerchantParameters'), '-_', '+/'))), true);
         $authorised = RedsysResponse::isAuthorisedCode((int) $request->responseCode);
 
-        $fakeGateway = new \Creagia\Redsys\RedsysFakeGateway(
+        $fakeGateway = new RedsysFakeGateway(
             $request->all(),
             config('redsys.tpv.key'),
         );
@@ -46,12 +51,12 @@ class RedsysLocalGatewayController
             : redirect($params['DS_MERCHANT_URLKO']);
     }
 
-    public function rest(Request $request): \Illuminate\Http\JsonResponse
+    public function rest(Request $request): JsonResponse
     {
         $params = json_decode(urldecode(base64_decode(strtr($request->get('Ds_MerchantParameters'), '-_', '+/'))), true);
         $request->responseCode = '0';
 
-        $fakeGateway = new \Creagia\Redsys\RedsysFakeGateway(
+        $fakeGateway = new RedsysFakeGateway(
             $request->all(),
             config('redsys.tpv.key'),
         );
