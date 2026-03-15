@@ -2,12 +2,13 @@
 
 namespace Creagia\LaravelRedsys;
 
+use Carbon\Carbon;
 use Creagia\Redsys\RedsysResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property \Carbon\Carbon $created_at
+ * @property Carbon $created_at
  * @property array $merchant_parameters
  */
 class RedsysNotificationLog extends Model

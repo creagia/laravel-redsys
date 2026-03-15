@@ -2,18 +2,20 @@
 
 namespace Creagia\LaravelRedsys;
 
+use Carbon\Carbon;
 use Creagia\LaravelRedsys\Contracts\RedsysPayable;
 use Creagia\LaravelRedsys\Observers\RedsysRequestObserver;
 use Creagia\Redsys\Enums\Currency;
 use Creagia\Redsys\Enums\PayMethod;
 use Creagia\Redsys\Enums\TransactionType;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Str;
 
 /**
- * @property \Carbon\Carbon $created_at
+ * @property Carbon $created_at
  * @property bool $save_card
  * @property int $order_number
  * @property ?string $response_code
@@ -31,6 +33,7 @@ use Illuminate\Support\Str;
  * @property TransactionType $transaction_type
  * @property-read RedsysPayable|Model|null $model
  */
+#[ObservedBy(RedsysRequestObserver::class)]
 class Request extends Model
 {
     protected $table = 'redsys_requests';
@@ -43,12 +46,6 @@ class Request extends Model
         'pay_method' => PayMethod::class,
         'transaction_type' => TransactionType::class,
     ];
-
-    protected static function boot()
-    {
-        parent::boot();
-        self::observe(RedsysRequestObserver::class);
-    }
 
     /**
      * @return MorphTo<Model, $this>
