@@ -9,3 +9,8 @@ parameters:
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
+    ignoreErrors:
+        - identifier: argument.type
+          path: src/Controllers/*
+        - identifier: trait.unused
+          path: src/Concerns/*

@@ -28,7 +28,7 @@ class RedsysLocalGatewayController
 
     public function post(Request $request): RedirectResponse|Redirector
     {
-        $params = json_decode(urldecode(base64_decode(strtr($request->get('Ds_MerchantParameters'), '-_', '+/'))), true);
+        $params = json_decode(urldecode(base64_decode(strtr($request->input('Ds_MerchantParameters'), '-_', '+/'))), true);
         $authorised = RedsysResponse::isAuthorisedCode((int) $request->responseCode);
 
         $fakeGateway = new RedsysFakeGateway(
@@ -53,7 +53,7 @@ class RedsysLocalGatewayController
 
     public function rest(Request $request): JsonResponse
     {
-        $params = json_decode(urldecode(base64_decode(strtr($request->get('Ds_MerchantParameters'), '-_', '+/'))), true);
+        $params = json_decode(urldecode(base64_decode(strtr($request->input('Ds_MerchantParameters'), '-_', '+/'))), true);
         $request->responseCode = '0';
 
         $fakeGateway = new RedsysFakeGateway(

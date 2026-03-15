@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property Carbon $created_at
- * @property array $merchant_parameters
+ * @property array<string, mixed> $merchant_parameters
  */
 class RedsysNotificationLog extends Model
 {

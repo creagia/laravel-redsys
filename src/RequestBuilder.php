@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 
 class RequestBuilder
 {
-    private ?RedsysRequest $redsysRequest;
+    private RedsysRequest $redsysRequest;
 
     public RequestParameters $requestParameters;
 
